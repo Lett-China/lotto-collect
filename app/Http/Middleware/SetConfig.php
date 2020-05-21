@@ -23,12 +23,6 @@ class SetConfig
         $lang  = in_array($lang, $allow) ? $lang : 'zh_CN';
         App::setLocale($lang);
 
-        $uri = $request->getRequestUri();
-        if (strpos($uri, '/api/admin/') !== false) {
-            config(['auth.defaults.guard' => 'admin']);
-            config(['audit.user.guards' => ['admin']]);
-        }
-
         return $next($request);
     }
 }

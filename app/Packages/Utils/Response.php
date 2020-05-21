@@ -250,23 +250,6 @@ class Response
      */
     private static function valueToString($mixture, $ext_params = [])
     {
-        // isset($ext_params['object_depth']) || $ext_params['object_depth'] = 1;
-        // if (is_object($mixture)) {
-        //     ksort($mixture);
-        //     $mixture = self::toObject($mixture, $ext_params['object_depth']);
-        //     foreach ($mixture as $key => $value) {
-        //         $mixture->$key = self::valueToString($value, $ext_params);
-        //     }
-        // } elseif (is_array($mixture)) {
-        //     ksort($mixture);
-        //     foreach ($mixture as $key => $value) {
-        //         $mixture[$key] = self::valueToString($value, $ext_params);
-        //     }
-        // } elseif (is_bool($mixture)) {
-        //     $mixture = strval(intval($mixture));
-        // } elseif (!is_string($mixture)) {
-        //     $mixture = strval($mixture);
-        // }
         return $mixture;
     }
 }

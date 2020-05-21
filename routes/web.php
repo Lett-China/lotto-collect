@@ -1,30 +1,18 @@
 <?php
 
-function isMobile()
-{
-    if (isset($_SERVER['HTTP_X_WAP_PROFILE'])) {
-        return true;
-    }
-    if (isset($_SERVER['HTTP_VIA'])) {
-        return stristr($_SERVER['HTTP_VIA'], 'wap') ? true : false;
-    }
+use Illuminate\Support\Facades\Route;
 
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-        $client_keywords = ['mobile', 'nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc', 'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic', 'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry', 'meizu', 'android', 'netfront', 'symbian', 'ucweb', 'windowsce', 'palm', 'operamini', 'operamobi', 'openwave', 'nexusone', 'cldc', 'midp', 'wap'];
-        if (preg_match('/(' . implode('|', $client_keywords) . ')/i', strtolower($_SERVER['HTTP_USER_AGENT']))) {
-            return true;
-        }
-    }
-    if (isset($_SERVER['HTTP_ACCEPT'])) {
-        if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
-            return true;
-        }
-    }
-    return false;
-}
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+ */
 
-if (isMobile()) {
-    Route::redirect('/', '/m');
-} else {
-    Route::redirect('/', '/pc');
-}
+Route::get('/', function () {
+    return view('welcome');
+});

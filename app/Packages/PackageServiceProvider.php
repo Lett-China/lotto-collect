@@ -24,7 +24,6 @@ class PackageServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->registerCommand();
         $this->routeMacro();
         $this->registerTelescope();
         $this->registerAliOssProvider();
@@ -34,14 +33,6 @@ class PackageServiceProvider extends ServiceProvider
     private function registerAliOssProvider()
     {
         $this->app->register(AliOssServiceProvider::class);
-    }
-
-    private function registerCommand()
-    {
-        $this->commands([
-            \App\Packages\Console\ControllerCommand::class,
-            \App\Packages\Console\ExceptionCommand::class,
-        ]);
     }
 
     private function registerTelescope()

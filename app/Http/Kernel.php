@@ -73,8 +73,5 @@ class Kernel extends HttpKernel
         'signed'        => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'      => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        //以下为自定义middleware
-        'wechat.oauth'  => \App\Packages\Middleware\WechatOauth::class, //微信授权
-        'jwt'           => \App\Packages\Middleware\JWTAuthMiddleware::class, // JWT授权
     ];
 }

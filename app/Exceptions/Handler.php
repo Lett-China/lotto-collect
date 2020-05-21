@@ -9,13 +9,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array
-     */
-    protected $dontReport = [];
-
-    /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
      * @var array
@@ -26,15 +19,11 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
+     * A list of the exception types that are not reported.
      *
-     * @param  \Exception $exception
-     * @return void
+     * @var array
      */
-    public function report(Exception $exception)
-    {
-        parent::report($exception);
-    }
+    protected $dontReport = [];
 
     /**
      * Render an exception into an HTTP response.
@@ -54,25 +43,17 @@ class Handler extends ExceptionHandler
             }
         }
 
-        //拦截错误信息，通过公共格式返回错误信息。
-        // if ($request->expectsJson()) {
-        //     $trace = $exception->getTrace();
-        //     $func  = function ($trace) {
-        //         return Arr::except($trace, ['args']);
-        //     };
-        //     $debug = [
-        //         'message'   => $exception->getMessage(),
-        //         'exception' => get_class($exception),
-        //         'file'      => $exception->getFile(),
-        //         'line'      => $exception->getLine(),
-        //         'trace'     => collect($trace)->map($func)->all(),
-        //     ];
-
-        //     $message = $exception->getMessage();
-        //     $result  = real()->code(500)->debug($debug)->error($message);
-        //     return response()->json($result);
-        // }
-        //----end----
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Report or log an exception.
+     *
+     * @param  \Exception $exception
+     * @return void
+     */
+    public function report(Exception $exception)
+    {
+        parent::report($exception);
     }
 }
