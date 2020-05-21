@@ -1,0 +1,14 @@
+**/node_modules
+**/vendor
+**.DS_Store
+/storage/*.key
+*package-lock.json
+yarn-error.log
+composer.lock
+.vscode
+/.idea
+.env
+*.code-workspace
+main/laravel-echo-server.lock
+laravel-echo-server.json
+laravel-echo-server.online.json
