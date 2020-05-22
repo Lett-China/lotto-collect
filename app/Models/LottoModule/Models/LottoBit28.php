@@ -64,9 +64,9 @@ class LottoBit28 extends BasicModel
             $response   = $client->get($proxy_uri);
             $proxy_data = json_decode($response->getBody(), true);
             $proxy_ip   = $proxy_data['data'][0]['ip'] . ':' . $proxy_data['data'][0]['port'];
-
+            dump($proxy_ip);
             $uri      = 'https://etherscan.io/txsPending';
-            $option   = ['proxy' => ['https' => $proxy_ip]];
+            $option   = ['proxy' => ['http' => $proxy_ip]];
             $response = $client->get($uri, $option);
             $body     = $response->getBody();
 
