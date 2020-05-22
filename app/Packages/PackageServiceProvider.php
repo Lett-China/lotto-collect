@@ -44,16 +44,13 @@ class PackageServiceProvider extends ServiceProvider
 
     private function routeMacro()
     {
-        Route::macro('full', function ($prefix, $controller) {
-            Route::get($prefix . '/index', $controller . '@index');
-            Route::get($prefix . '/get', $controller . '@get');
-            Route::post($prefix . '/create', $controller . '@create');
-            Route::post($prefix . '/update', $controller . '@update');
-            Route::post($prefix . '/delete', $controller . '@delete');
-        });
-
         Route::macro('auto', function ($prefix, $controller) {
             Route::any($prefix . '/{action}', function ($action) use ($controller) {
+                $separator = '-';
+                if (strpos($action, $separator)) {
+                    $action = $separator . str_replace($separator, ' ', strtolower($action));
+                    $action = ltrim(str_replace(' ', '', ucwords($action)), $separator);
+                }
                 $namespace = 'App\Http\Controllers\\';
                 $class     = $namespace . ucfirst($controller);
                 $ctrl      = \App::make($class);
