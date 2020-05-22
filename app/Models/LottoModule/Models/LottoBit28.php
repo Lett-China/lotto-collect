@@ -3,9 +3,12 @@ namespace App\Models\LottoModule\Models;
 
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\Models\OpenControl;
+use App\Models\LottoModule\Traits\Lotto28Trait;
 
 class LottoBit28 extends BasicModel
 {
+    use Lotto28Trait;
+
     public $rememberCacheTag = 'lotto_bit_28';
 
     protected $configs = [

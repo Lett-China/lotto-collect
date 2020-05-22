@@ -13,11 +13,7 @@ class User extends Authenticatable implements JWTSubject, Auditable
 
     public $incrementing = false;
 
-    protected $casts = ['disable' => 'bool', 'robot' => 'bool', 'trial' => 'bool'];
-
     protected $connection = 'main_sql';
-
-    protected $fillable = ['id', 'nickname', 'real_name', 'password', 'safe_word', 'mobile', 'contact_qq', 'status', 'robot', 'trial', 'requested_at', 'requested_ip', 'created_ip'];
 
     protected $hidden = ['password', 'safe_word'];
 }

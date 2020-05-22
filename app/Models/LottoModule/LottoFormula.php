@@ -19,11 +19,11 @@ class LottoFormula
     {
         $source  = explode(',', $open_code);
         $label   = [2, 5, 8, 11, 14, 17];
-        $sec_1   = LottoUtils::getCodeArea($label, $source);
+        $sec_1   = self::getCodeArea($label, $source);
         $label   = [3, 6, 9, 12, 15, 18];
-        $sec_2   = LottoUtils::getCodeArea($label, $source);
+        $sec_2   = self::getCodeArea($label, $source);
         $label   = [4, 7, 10, 13, 16, 19];
-        $sec_3   = LottoUtils::getCodeArea($label, $source);
+        $sec_3   = self::getCodeArea($label, $source);
         $value   = $sec_1['mantissa'] + $sec_2['mantissa'] + $sec_3['mantissa'];
         $arrange = [
             $sec_1['mantissa'],
@@ -65,11 +65,11 @@ class LottoFormula
     {
         $source  = explode(',', $open_code);
         $label   = [1, 2, 3, 4, 5, 6];
-        $sec_1   = LottoUtils::getCodeArea($label, $source);
+        $sec_1   = self::getCodeArea($label, $source);
         $label   = [7, 8, 9, 10, 11, 12];
-        $sec_2   = LottoUtils::getCodeArea($label, $source);
+        $sec_2   = self::getCodeArea($label, $source);
         $label   = [13, 14, 15, 16, 17, 18];
-        $sec_3   = LottoUtils::getCodeArea($label, $source);
+        $sec_3   = self::getCodeArea($label, $source);
         $value   = $sec_1['mantissa'] + $sec_2['mantissa'] + $sec_3['mantissa'];
         $arrange = [
             $sec_1['mantissa'],
@@ -86,6 +86,18 @@ class LottoFormula
             'code_arr' => $arrange,
             'win_code' => implode(',', $arrange),
         ];
+        return $result;
+    }
+
+    private static function getCodeArea($label, $source)
+    {
+        $result = ['code' => [], 'total' => 0, 'mantissa' => 0];
+        foreach ($label as $value) {
+            $code             = (int) $source[$value - 1];
+            $result['code'][] = $code;
+            $result['total'] += $code;
+        }
+        $result['mantissa'] = (int) substr($result['total'], -1);
         return $result;
     }
 }

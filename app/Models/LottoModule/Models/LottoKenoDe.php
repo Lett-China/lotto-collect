@@ -10,7 +10,7 @@ class LottoKenoDe extends BasicModel
 
     public $rememberCacheTag = 'lotto_keno_de';
 
-    protected $formula_name = 'de28';
+    protected $lotto_name = 'de28';
 
     protected $table = 'lotto_keno_de';
 

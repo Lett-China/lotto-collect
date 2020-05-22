@@ -3,6 +3,7 @@ namespace App\Models\LottoModule\Traits;
 
 use Illuminate\Support\Facades\Cache;
 use App\Models\LottoModule\LottoFormula;
+
 trait Lotto28Trait
 {
     public function getWinCodeAttribute()
@@ -12,7 +13,7 @@ trait Lotto28Trait
         }
 
         try {
-            $lotto_name = $this->formula_name;
+            $lotto_name = $this->lotto_name;
             $formula    = LottoFormula::$lotto_name($this->open_code);
             return (string) $formula['win_code'];
         } catch (\Throwable $th) {
@@ -29,7 +30,7 @@ trait Lotto28Trait
             return null;
         }
 
-        $lotto_name = $this->formula_name;
+        $lotto_name = $this->lotto_name;
         if (!$lotto_name) {
             return null;
         }

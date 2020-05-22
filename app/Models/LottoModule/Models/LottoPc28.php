@@ -17,7 +17,7 @@ class LottoPc28 extends BasicModel
         'incrementing' => true,
     ];
 
-    protected $formula_name = 'pc28';
+    protected $lotto_name = 'pc28';
 
     protected $table = 'lotto_beijing8';
 }

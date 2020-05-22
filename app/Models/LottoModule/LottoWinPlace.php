@@ -80,6 +80,7 @@ class LottoWinPlace
             $result[] = 'ww_' . $value;
         }
         $result[] = 'he_' . sprintf('%02d', $he);
+        $result[] = 'fd_' . sprintf('%02d', $he);
 
         //胆拖
         foreach (array_unique($code) as $value) {

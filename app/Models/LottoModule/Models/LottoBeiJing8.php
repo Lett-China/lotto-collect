@@ -17,7 +17,7 @@ class LottoBeiJing8 extends BasicModel
         'incrementing' => true,
     ];
 
-    protected $formula_name = 'bj28';
+    protected $lotto_name = 'bj28';
 
     protected $table = 'lotto_beijing8';
 
@@ -59,8 +59,8 @@ class LottoBeiJing8 extends BasicModel
             if ($current->lotto_at > $lotto_at) {
                 $data['status'] = 3;
                 $warning_type   = 'error';
-                LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
             }
+            LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
         }
 
         $current->update($data);

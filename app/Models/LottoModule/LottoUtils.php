@@ -8,19 +8,7 @@ class LottoUtils
         $name || $name = request()->lotto_name;
         $mapping       = config('lotto.model.system');
         $class         = $mapping[$name];
-        return app($class)->setLottoName($name);
-    }
-
-    public static function getCodeArea($label, $source)
-    {
-        $result = ['code' => [], 'total' => 0, 'mantissa' => 0];
-        foreach ($label as $value) {
-            $code             = (int) $source[$value - 1];
-            $result['code'][] = $code;
-            $result['total'] += $code;
-        }
-        $result['mantissa'] = (int) substr($result['total'], -1);
-        return $result;
+        return app($class);
     }
 
     public static function openCaiAPI($code = '', $type = 'new', $extend = null, $row = 20)
