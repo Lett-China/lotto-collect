@@ -49,7 +49,6 @@ class LottoMlaft extends BasicModel
             $data['lotto_at'] = $lotto_at;
         }
 
-        // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
         if ($current->lotto_at !== null && $current->lotto_at != $lotto_at) {
             $warning_type = 'warning';
             if ($current->lotto_at > $lotto_at) {
