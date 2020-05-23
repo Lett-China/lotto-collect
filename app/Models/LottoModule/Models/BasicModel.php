@@ -18,4 +18,6 @@ class BasicModel extends Model
     protected $connection = 'lotto_data';
 
     protected $fillable = ['id', 'open_code', 'lotto_at', 'opened_at', 'mark', 'status', 'extend', 'control', 'logs'];
+
+    protected $hidden = ['extend', 'control'];
 }
