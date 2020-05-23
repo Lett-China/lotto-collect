@@ -13,7 +13,7 @@ class BasicModel extends Model
 
     public $timestamps = false;
 
-    protected $casts = ['extend' => 'array', 'win_code' => 'string'];
+    protected $casts = ['extend' => 'array', 'win_code' => 'string', 'id' => 'string'];
 
     protected $connection = 'lotto_data';
 
