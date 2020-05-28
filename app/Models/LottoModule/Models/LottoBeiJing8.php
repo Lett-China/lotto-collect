@@ -72,7 +72,7 @@ class LottoBeiJing8 extends BasicModel
         }
 
         //根据77的采集时间 作为错误值记录
-        if ($data['time_fix'] === 1 && $current->lotto_at !== null && $current->lotto_at != $lotto_at) {
+        if (isset($data['time_fix']) && $current->lotto_at !== null && $current->lotto_at != $lotto_at) {
             if ($current->lotto_at !== null && $current->lotto_at != $lotto_at) {
                 $warning_type = 'warning';
                 if ($current->lotto_at > $lotto_at) {
