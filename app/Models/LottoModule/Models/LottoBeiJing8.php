@@ -71,22 +71,24 @@ class LottoBeiJing8 extends BasicModel
             return 'create';
         }
 
+        //根据77的采集时间 作为错误值记录
+        if ($data['time_fix'] === 1 && $current->lotto_at !== null && $current->lotto_at != $lotto_at) {
+            if ($current->lotto_at !== null && $current->lotto_at != $lotto_at) {
+                $warning_type = 'warning';
+                if ($current->lotto_at > $lotto_at) {
+                    $data['status'] = 3;
+                    $warning_type   = 'error';
+                }
+                LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
+            }
+        }
+
         if ($current->status != 1) {
             return 'status:' . $current->status;
         }
 
         if ($current->lotto_at === null) {
             $data['lotto_at'] = $lotto_at;
-        }
-
-        // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
-        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at && $data['time_fix'] === 1) {
-            $warning_type = 'warning';
-            if ($current->lotto_at > $lotto_at) {
-                $data['status'] = 3;
-                $warning_type   = 'error';
-            }
-            LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
         }
 
         $current->update($data);
