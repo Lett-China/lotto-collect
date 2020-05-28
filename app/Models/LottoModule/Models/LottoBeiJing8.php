@@ -38,6 +38,7 @@ class LottoBeiJing8 extends BasicModel
                 'id'        => $item['preDrawIssue'],
                 'open_code' => '  ' . $code,
                 'opened_at' => $item['preDrawTime'],
+                'time_fix'  => 1,
             ];
             $result = $this->lottoOpen($data);
             dump($data['id'] . ': ' . $result);
@@ -79,9 +80,12 @@ class LottoBeiJing8 extends BasicModel
         }
 
         // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
-        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at && $current->lotto_at > $lotto_at) {
-            $data['status'] = 3;
-            $warning_type   = 'error';
+        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at && $data['time_fix'] === 1) {
+            $warning_type = 'warning';
+            if ($current->lotto_at > $lotto_at) {
+                $data['status'] = 3;
+                $warning_type   = 'error';
+            }
             LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
         }
 
