@@ -96,7 +96,8 @@ return [
         'totem*',
         'broadcasting*',
         'api/admin*',
-        'open-api*',
+        'api/lotto*',
+        'api/bitcoin-collect',
     ],
 
     'ignore_commands' => [

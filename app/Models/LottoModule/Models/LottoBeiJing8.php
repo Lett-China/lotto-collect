@@ -21,10 +21,35 @@ class LottoBeiJing8 extends BasicModel
 
     protected $table = 'lotto_beijing8';
 
+    public function collect77()
+    {
+        $uri      = 'http://508590.com/LuckTwenty/getBaseLuckTwentyList.do?date=&lotCode=10014';
+        $client   = new \GuzzleHttp\Client(['timeout' => 5]);
+        $response = $client->get($uri);
+        $body     = $response->getBody();
+
+        $data  = json_decode($body, true);
+        $items = $data['result']['data'];
+        $items = array_slice($items, 0, 20);
+
+        foreach ($items as $item) {
+            $code = substr($item['preDrawCode'], 0, 59);
+            $data = [
+                'id'        => $item['preDrawIssue'],
+                'open_code' => '  ' . $code,
+                'opened_at' => $item['preDrawTime'],
+            ];
+            $result = $this->lottoOpen($data);
+            dump($data['id'] . ': ' . $result);
+        }
+
+        return true;
+    }
+
     public function lottoOpen($data)
     {
-        $open_code         = $data['open_code'];
-        $data['open_code'] = substr($open_code, 0, strrpos($open_code, '+'));
+        $open_code         = trimAll($data['open_code']);
+        $data['open_code'] = substr($open_code, 0, 59);
 
         $lottoAtFix = function ($time) {
             $time = strtotime($time);
@@ -54,12 +79,9 @@ class LottoBeiJing8 extends BasicModel
         }
 
         // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
-        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at) {
-            $warning_type = 'warning';
-            if ($current->lotto_at > $lotto_at) {
-                $data['status'] = 3;
-                $warning_type   = 'error';
-            }
+        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at && $current->lotto_at > $lotto_at) {
+            $data['status'] = 3;
+            $warning_type   = 'error';
             LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
         }
 
