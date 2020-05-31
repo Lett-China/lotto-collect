@@ -5,15 +5,10 @@ namespace App\Models\LottoModule\Traits;
 use App\Models\LottoModule\Models\LottoWarning;
 trait K3Trait
 {
-    public function getWinCodeAttribute()
-    {
-        return $this->open_code;
-    }
-
     public function getWinExtendAttribute()
     {
         $result = [];
-        $code   = $this->win_code;
+        $code   = $this->open_code;
         if (null === $code) {
             return null;
         }

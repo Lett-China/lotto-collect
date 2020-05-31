@@ -38,7 +38,7 @@ class LottoFormula
                 'sec_3' => $sec_3,
             ],
             'code_arr' => $arrange,
-            'win_code' => implode(',', $arrange),
+            'code_str' => implode(',', $arrange),
         ];
         return $result;
     }
@@ -56,7 +56,7 @@ class LottoFormula
             'code_he'  => $code_he,
             'source'   => $source,
             'code_arr' => $arrange,
-            'win_code' => implode(',', $arrange),
+            'code_str' => implode(',', $arrange),
         ];
         return $result;
     }
@@ -84,7 +84,7 @@ class LottoFormula
                 'sec_3' => $sec_3,
             ],
             'code_arr' => $arrange,
-            'win_code' => implode(',', $arrange),
+            'code_str' => implode(',', $arrange),
         ];
         return $result;
     }

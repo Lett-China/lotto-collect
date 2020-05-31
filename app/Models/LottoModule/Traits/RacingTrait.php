@@ -4,21 +4,16 @@ namespace App\Models\LottoModule\Traits;
 
 trait RacingTrait
 {
-    public function getWinCodeAttribute()
-    {
-        return $this->open_code;
-    }
-
     public function getWinExtendAttribute()
     {
-        if (!$this->win_code) {
+        if (!$this->open_code) {
             return null;
         }
-        $arr = explode(',', $this->win_code);
+        $arr = explode(',', $this->open_code);
 
         $result = [];
 
-        $result['source']   = $this->win_code;
+        $result['source']   = $this->open_code;
         $result['code_gyh'] = sprintf('%02d', ($arr[0] + $arr[1]));
         return $result;
     }

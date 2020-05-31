@@ -23,29 +23,18 @@ class LottoBit28 extends BasicModel
 
     protected $table = 'lotto_bit_28';
 
-    public function getWinCodeAttribute()
-    {
-        if (!$this->open_code) {
-            return null;
-        }
-
-        $formula = LottoFormula::bit28($this->open_code);
-        return (string) $formula['win_code'];
-    }
-
     public function getWinExtendAttribute()
     {
-        $result = [];
-        $code   = $this->win_code;
-
-        if (null === $code) {
+        if (null === $this->open_code) {
             return null;
         }
 
         $formula = LottoFormula::bit28($this->open_code);
         $he      = $formula['code_he'];
 
+        $result             = [];
         $result['code_arr'] = $formula['code_arr'];
+        $result['code_str'] = $formula['code_str'];
         $result['code_he']  = sprintf('%02d', $he);
 
         $he >= 14 && $result['code_bos']    = '大';

@@ -12,13 +12,13 @@ trait ShiShiCaiTrait
 
     public function getWinExtendAttribute()
     {
-        if (!$this->win_code) {
+        if (!$this->open_code) {
             return null;
         }
-        $arr = explode(',', $this->win_code);
+        $arr = explode(',', $this->open_code);
 
         $result           = [];
-        $result['source'] = $this->win_code;
+        $result['source'] = $this->open_code;
         $he               = 0;
         foreach ($arr as $value) {
             $he += $value;

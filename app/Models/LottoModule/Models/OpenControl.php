@@ -28,7 +28,7 @@ class OpenControl extends Model
             $data = [
                 'type'          => 'keno',
                 'open_code'     => $open_code,
-                'win_code'      => $formula['win_code'],
+                'win_code'      => $formula['code_str'],
                 'win_he'        => $formula['code_he'],
                 'win_code_sort' => implode(',', $formula['code_arr']),
                 'status'        => 1,
@@ -48,7 +48,7 @@ class OpenControl extends Model
         }
 
         $formula   = LottoFormula::$lotto_name($open_code);
-        $win_place = LottoWinPlace::lotto28($formula['win_code']);
+        $win_place = LottoWinPlace::lotto28($formula['code_str']);
 
         $total_bonus = 0;
         $total_bet   = 0;

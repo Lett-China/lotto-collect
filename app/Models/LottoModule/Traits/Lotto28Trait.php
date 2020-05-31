@@ -6,39 +6,17 @@ use App\Models\LottoModule\LottoFormula;
 
 trait Lotto28Trait
 {
-    public function getWinCodeAttribute()
-    {
-        if (!$this->open_code) {
-            return null;
-        }
-
-        try {
-            $lotto_name = $this->lotto_name;
-            $formula    = LottoFormula::$lotto_name($this->open_code);
-            return (string) $formula['win_code'];
-        } catch (\Throwable $th) {
-            return null;
-        }
-    }
-
     public function getWinExtendAttribute()
     {
-        $result = [];
-        $code   = $this->win_code;
-
-        if (null === $code) {
+        if ($this->open_code === null) {
             return null;
         }
-
         $lotto_name = $this->lotto_name;
-        if (!$lotto_name) {
-            return null;
-        }
-
-        $formula = LottoFormula::$lotto_name($this->open_code);
-        $he      = $formula['code_he'];
+        $formula    = LottoFormula::$lotto_name($this->open_code);
+        $he         = $formula['code_he'];
 
         $result['code_arr'] = $formula['code_arr'];
+        $result['code_str'] = $formula['code_str'];
         $result['code_he']  = sprintf('%02d', $he);
 
         $he >= 14 && $result['code_bos']    = '大';
