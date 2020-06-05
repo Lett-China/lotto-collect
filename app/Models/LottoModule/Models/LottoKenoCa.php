@@ -162,13 +162,13 @@ class LottoKenoCa extends BasicModel
     {
         $client = new \GuzzleHttp\Client(['timeout' => 60]);
 
-        $uri = 'https://www.playnow.com/services2/keno/draw/2564634/21';
-        $uri = 'https://www.playnow.com/services2/keno/draw/2020-05-02/21/0';
-        $uri = 'https://www.playnow.com/services2/keno/draw/latest/10/0';
+        $uri = 'https://www.playnow.com/services2/keno/draw/2020-06-02/21/0';
+        $uri = 'https://www.playnow.com/services2/keno/draw/2576727/21';
+        $uri = 'https://www.playnow.com/services2/keno/draw/latest/10/0?time=' . time();
 
         date_default_timezone_set('America/Vancouver');
 
-        $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=1&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
+        $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
         $response   = $client->get($proxy_uri);
         $proxy_data = json_decode($response->getBody(), true);
 
@@ -176,12 +176,17 @@ class LottoKenoCa extends BasicModel
             dump($proxy_data['msg']);
             return false;
         }
-        $proxy_ip = $proxy_data['data'][0]['ip'] . ':' . $proxy_data['data'][0]['port'];
+        $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
 
         $options  = ['proxy' => ['https' => $proxy_ip]];
         $response = $client->get($uri, $options);
         $data     = json_decode($response->getBody(), true);
-
+        dump($uri);
+        if ($data == null) {
+            dump('data null', $response->getBody());
+            return false;
+        }
+        dump($data);
         foreach ($data as $key => $value) {
             date_default_timezone_set('America/Vancouver');
             $datetime = $value['drawDate'] . ' ' . $value['drawTime'];
