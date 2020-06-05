@@ -13,6 +13,8 @@ class BasicModel extends Model
 
     public $timestamps = false;
 
+    protected $appends = ['win_extend'];
+
     protected $casts = ['extend' => 'array', 'id' => 'string'];
 
     protected $connection = 'lotto_data';
