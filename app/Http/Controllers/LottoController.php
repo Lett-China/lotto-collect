@@ -23,7 +23,7 @@ class LottoController extends Controller
         $request->id && $items->where('id', $request->id);
         $items->take(10)->orderBy('id', 'desc');
         $items = $items->get();
-        $items->makeHidden(['win_extend', 'lotto_name', 'bet_count_down', 'short_id', 'status', 'updated_at', 'opened_at']);
+        $items->makeHidden(['win_extend', 'lotto_name', 'bet_count_down', 'short_id', 'status', 'updated_at', 'opened_at', 'logs']);
 
         $result = [
             'name'  => $request->lotto_name,
