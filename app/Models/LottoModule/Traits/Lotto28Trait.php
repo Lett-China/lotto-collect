@@ -1,26 +1,48 @@
 <?php
 namespace App\Models\LottoModule\Traits;
 
-use Illuminate\Support\Facades\Cache;
 use App\Models\LottoModule\LottoFormula;
+use Illuminate\Support\Facades\Cache;
 
 trait Lotto28Trait
 {
+    public function getWinExtElAttribute()
+    {
+        if ($this->open_code === null) {
+            return null;
+        }
+
+        $formula = LottoFormula::basic11($this->open_code);
+        $formula['code_he'] = sprintf('%02d', $formula['code_he']);
+        return $formula;
+    }
+
+    public function getWinExtStAttribute()
+    {
+        if ($this->open_code === null) {
+            return null;
+        }
+
+        $formula = LottoFormula::basic16($this->open_code);
+        $formula['code_he'] = sprintf('%02d', $formula['code_he']);
+        return $formula;
+    }
+
     public function getWinExtendAttribute()
     {
         if ($this->open_code === null) {
             return null;
         }
         $lotto_name = $this->lotto_name;
-        $formula    = LottoFormula::$lotto_name($this->open_code);
-        $he         = $formula['code_he'];
+        $formula = LottoFormula::$lotto_name($this->open_code);
+        $he = $formula['code_he'];
 
         $result['code_arr'] = $formula['code_arr'];
         $result['code_str'] = $formula['code_str'];
-        $result['code_he']  = sprintf('%02d', $he);
+        $result['code_he'] = sprintf('%02d', $he);
 
-        $he >= 14 && $result['code_bos']    = '大';
-        $he <= 13 && $result['code_bos']    = '小';
+        $he >= 14 && $result['code_bos'] = '大';
+        $he <= 13 && $result['code_bos'] = '小';
         $he % 2 == 1 && $result['code_sod'] = '单';
         $he % 2 == 0 && $result['code_sod'] = '双';
 
@@ -30,7 +52,7 @@ trait Lotto28Trait
     public function openedExtend($refresh = false)
     {
         $cache_name = 'OpenedExtendLotto28:' . __CLASS__;
-        $cache_has  = cache()->has($cache_name);
+        $cache_has = cache()->has($cache_name);
 
         if ($cache_has === false || $refresh === true) {
             $data = $this->where('status', '!=', 1)->orderBy('id', 'desc')->remember(60)->take(5000);
@@ -41,7 +63,7 @@ trait Lotto28Trait
             $result = [];
 
             for ($i = 0; $i <= 27; $i++) {
-                $key          = sprintf('%02d', $i);
+                $key = sprintf('%02d', $i);
                 $result[$key] = ['miss' => $count, 'hot' => 0];
             }
 
