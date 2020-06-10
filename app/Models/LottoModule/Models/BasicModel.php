@@ -13,7 +13,7 @@ class BasicModel extends Model
 
     public $timestamps = false;
 
-    protected $appends = ['win_extend'];
+    protected $appends = ['win_extend', 'short_id'];
 
     protected $casts = ['extend' => 'array', 'id' => 'string'];
 
@@ -22,4 +22,15 @@ class BasicModel extends Model
     protected $fillable = ['id', 'open_code', 'lotto_at', 'opened_at', 'mark', 'status', 'extend', 'control', 'logs'];
 
     protected $hidden = ['extend', 'control'];
+
+    public function getShortIdAttribute()
+    {
+        $length = mb_strlen($this->id);
+        if ($length >= 11) {
+            $need = $length - 4;
+            return (string) substr($this->id, -$need);
+        } else {
+            return (string) $this->id;
+        }
+    }
 }

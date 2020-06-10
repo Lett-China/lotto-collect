@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\LottoModule\LottoChart;
+use App\Models\LottoModule\LottoUtils;
 
 class LottoChartController extends Controller
 {
@@ -23,16 +24,20 @@ class LottoChartController extends Controller
         ];
 
         $title = $name[$request->name] . $chart[$request->chart];
+        $limit = request()->limit ?: 100;
 
-        $model = new LottoChart();
-        $items = $model->lotto($request->name)->chart($request->chart);
+        $last       = LottoUtils::model($request->name)->where('status', '2')->orderBy('id', 'desc')->first();
+        $cache_name = 'lottoTrendChart.' . $request->name . ':' . $last->id;
 
-        $result = $items;
+        $items = cache()->remember($cache_name, 86400, function () use ($request) {
+            $model = new LottoChart();
+            $items = $model->lotto($request->name)->chart($request->chart);
+            return $items;
+        });
         $limit  = request()->limit ?: 100;
+        $id_ass = $items['items'][0]['id'] % 5;
 
-        $type = intval(substr($request->chart, -2));
-
-        return view('keno', compact('result', 'limit', 'title', 'request'));
+        return view('keno', compact('items', 'limit', 'title', 'request', 'id_ass'));
 
     }
 }

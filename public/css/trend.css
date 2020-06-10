@@ -26,7 +26,6 @@ body {font-family:'Helvetica Neue',Helvetica,'PingFang SC','Microsoft YaHei','å¾
 .table {margin:-1px;border-collapse:collapse;background: #fff;font-size: 13px;min-width:1200px;}
 .table th, .table td {line-height: 25px;height: 28px;border: 1px solid #f2f4f5;text-align: center;font-weight: normal;vertical-align:middle;}
 .table th {background-color:#f6f8f9;border-color: #e4e6e7;}
-.table tr:nth-child(5n) td{border-bottom-color: #e4e6e7;}
 
 .keno-28 tr:last-child td {border-top-color: #e4e6e7;}
 .keno-28 td:nth-child(1) {border-right-color: #e4e6e7;}

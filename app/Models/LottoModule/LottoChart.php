@@ -83,8 +83,6 @@ class LottoChart
             ];
 
             return $result;
-
-            return $items->toArray();
         }
     }
 
@@ -154,8 +152,6 @@ class LottoChart
         ];
 
         return $result;
-
-        return $items->toArray();
     }
 
     public function chartKeno28()
@@ -223,8 +219,6 @@ class LottoChart
         ];
 
         return $result;
-
-        return $items->toArray();
     }
 
     public function lotto($lotto_name)
