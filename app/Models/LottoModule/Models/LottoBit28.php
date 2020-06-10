@@ -178,10 +178,10 @@ class LottoBit28 extends BasicModel
 
         $formula = LottoFormula::bit28($open_code);
 
-        //如果随机到0 27 且没有控制 重新开始。
-        if (in_array($formula['code_he'], [0, 27]) && in_array($item->control, ['he_00', 'he_27']) === false) {
-            goto start;
-        }
+        // //如果随机到0 27 且没有控制 重新开始。
+        // if (in_array($formula['code_he'], [0, 27]) && in_array($item->control, ['he_00', 'he_27']) === false) {
+        //     goto start;
+        // }
 
         //如果有设置和值 控制
         if (stripos($item->control, 'he_') !== false && $count <= 500) {

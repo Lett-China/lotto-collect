@@ -76,10 +76,10 @@ class LottoKenoDe extends BasicModel
         $open_code = $control->openCode();
         $formula   = LottoFormula::basic28($open_code);
 
-        //如果随机到0 27 且没有控制 重新开始。
-        if (in_array($formula['code_he'], [0, 27]) && in_array($item->control, ['he_00', 'he_27']) === false) {
-            goto start;
-        }
+        // //如果随机到0 27 且没有控制 重新开始。
+        // if (in_array($formula['code_he'], [0, 27]) && in_array($item->control, ['he_00', 'he_27']) === false) {
+        //     goto start;
+        // }
 
         //根据下注额控制
         if ($item->control === 'bet' && $count <= 50) {
