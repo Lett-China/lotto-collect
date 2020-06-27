@@ -30,24 +30,33 @@ class CollectOpenCaiCommand extends Command
         $source->code = array_reverse($source->data);
 
         foreach ($source->data as $value) {
+            $cache_name = $value->code . ':' . $value->expect . '===openCaiCollect';
             if (isset($mapping[$value->code]) === false) {
                 continue;
             }
 
             $model = $mapping[$value->code];
-            $data  = [
-                'id'        => $value->expect,
-                'open_code' => $value->opencode,
-                'opened_at' => $value->opentime,
-            ];
+            if (!cache()->has($cache_name) === false) {
+                $data = [
+                    'id'        => $value->expect,
+                    'open_code' => $value->opencode,
+                    'opened_at' => $value->opentime,
+                ];
 
-            try {
-                $result = app($model)->lottoOpen($data);
-            } catch (\Throwable $th) {
-                $result = $th->getMessage();
+                try {
+                    $result = app($model)->lottoOpen($data);
+                } catch (\Throwable $th) {
+                    $result = $th->getMessage();
+                }
+            } else {
+                $result = 'cache';
             }
 
-            $message = $model . ' ' . $data['id'] . ': ' . $result;
+            if ($result === 'update') {
+                cache()->put($cache_name, 600);
+            }
+
+            $message = $model . ' ' . $value->expect . ': ' . $result;
             $this->comment($message);
         }
 
