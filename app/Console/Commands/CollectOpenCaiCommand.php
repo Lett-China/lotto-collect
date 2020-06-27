@@ -31,12 +31,13 @@ class CollectOpenCaiCommand extends Command
 
         foreach ($source->data as $value) {
             $cache_name = $value->code . ':' . $value->expect . '===openCaiCollect';
+
             if (isset($mapping[$value->code]) === false) {
                 continue;
             }
 
             $model = $mapping[$value->code];
-            if (!cache()->has($cache_name) === false) {
+            if (cache()->has($cache_name) === false) {
                 $data = [
                     'id'        => $value->expect,
                     'open_code' => $value->opencode,
@@ -52,8 +53,8 @@ class CollectOpenCaiCommand extends Command
                 $result = 'cache';
             }
 
-            if ($result === 'update') {
-                cache()->put($cache_name, 600);
+            if ($result === 'update' || $result === 'status:2') {
+                cache()->put($cache_name, 86400);
             }
 
             $message = $model . ' ' . $value->expect . ': ' . $result;
