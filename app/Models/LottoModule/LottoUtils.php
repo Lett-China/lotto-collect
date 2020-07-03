@@ -11,6 +11,44 @@ class LottoUtils
         return app($class);
     }
 
+    public static function dataBeApi($row = 3)
+    {
+        $cache_name  = 'dataBeApi:Data';
+        $cache_data  = cache()->get($cache_name);
+        $cache_error = 'dataBeApi:Error';
+
+        if (cache()->has($cache_error)) {
+            dump('data from cache by error');
+            return $cache_data;
+        }
+
+        $params = [
+            'token'  => '97fe0a5897a49733',
+            'rows'   => $row,
+            'format' => 'json',
+        ];
+
+        $uri = 'http://lot.apius.cn/u';
+
+        try {
+            $client   = new \GuzzleHttp\Client(['timeout' => 30]);
+            $response = $client->get($uri, ['query' => $params]);
+            $html     = $response->getBody();
+            $result   = json_decode($html);
+            if (!$result) {
+                dump('data from cache by collect error');
+                cache()->put($cache_error, 1, 3);
+                return $cache_data;
+            }
+            $result->str = $html;
+            cache()->put($cache_name, $result);
+        } catch (\Throwable $th) {
+            dump($th->getMessage());
+            return $cache_data;
+        }
+        return $result;
+    }
+
     public static function openCaiAPI($code = '', $type = 'new', $extend = null, $row = 20)
     {
         $cache_name  = 'openCai:Data';
