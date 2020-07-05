@@ -11,6 +11,38 @@ class LottoUtils
         return app($class);
     }
 
+    public static function XingCaiApi()
+    {
+        $cache_name  = 'XingCaiApi:Data';
+        $cache_data  = cache()->get($cache_name);
+        $cache_error = 'XingCaiApi:Error';
+
+        if (cache()->has($cache_error)) {
+            dump('data from cache by error');
+            return $cache_data;
+        }
+
+        $uri = 'http://a.apilottery.com/api/7f9aa602dab0ed2866af8f4a5a8126b6/all/json';
+
+        try {
+            $client   = new \GuzzleHttp\Client(['timeout' => 30]);
+            $response = $client->get($uri, []);
+            $html     = $response->getBody();
+            $result   = json_decode($html);
+            if (!$result) {
+                dump('data from cache by collect error');
+                cache()->put($cache_error, 1, 3);
+                return $cache_data;
+            }
+            $result->str = $html;
+            cache()->put($cache_name, $result);
+        } catch (\Throwable $th) {
+            dump($th->getMessage());
+            return $cache_data;
+        }
+        return $result;
+    }
+
     public static function dataBeApi($row = 3)
     {
         $cache_name  = 'dataBeApi:Data';

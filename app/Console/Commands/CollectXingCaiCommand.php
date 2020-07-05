@@ -5,28 +5,28 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\LottoModule\LottoUtils;
 
-class CollectDataBeCommand extends Command
+class CollectXingCaiCommand extends Command
 {
-    protected $description = 'collect data_be';
+    protected $description = 'collect xing_cai';
 
     protected $lotto_mapping = [];
 
     protected $model_mapping = [];
 
-    protected $signature = 'collect:data_be';
+    protected $signature = 'collect:xing_cai';
 
     public function __construct()
     {
-        $this->model_mapping = config('lotto.collect_api.data_be');
+        $this->model_mapping = config('lotto.collect_api.xing_cai');
         $this->lotto_mapping = config('lotto.model.system');
         parent::__construct();
     }
 
     public function handle()
     {
-        $this->info('collect data_be start');
-        $source = LottoUtils::dataBeApi(8);
-
+        $this->info('collect xing_cai start');
+        $source = LottoUtils::XingCaiApi();
+        dd($source);
         if (!isset($source->rows) || $source->rows < 1) {
             $this->comment($source->str);
             return $this->error('error in data');
@@ -35,7 +35,7 @@ class CollectDataBeCommand extends Command
         $source->code = array_reverse($source->data);
 
         foreach ($source->data as $value) {
-            $cache_name = $value->code . ':' . $value->expect . '===dataBeCollect';
+            $cache_name = $value->code . ':' . $value->expect . '===XingCaiCollect';
 
             if (isset($this->model_mapping[$value->code]) === false) {
                 continue;
@@ -67,6 +67,6 @@ class CollectDataBeCommand extends Command
             $this->comment($message);
         }
 
-        return $this->info('collect data_be success');
+        return $this->info('collect xing_cai success');
     }
 }
