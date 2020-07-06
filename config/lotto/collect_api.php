@@ -7,6 +7,7 @@ $data_be = [
     'cabskl8' => 'ca28',
     'bjpk10'  => 'pk10',
     'hubk3'   => 'hubk3',
+    'hebk3'   => 'hebk3',
     'cqssc'   => 'cqssc',
     'ahk3'    => 'ahk3',
     'tjssc'   => 'tjssc',

@@ -26,24 +26,26 @@ class CollectXingCaiCommand extends Command
     {
         $this->info('collect xing_cai start');
         $source = LottoUtils::XingCaiApi();
-        dd($source);
+        // dd($source);
         if (!isset($source->rows) || $source->rows < 1) {
             $this->comment($source->str);
             return $this->error('error in data');
         }
 
-        $source->code = array_reverse($source->data);
-
         foreach ($source->data as $value) {
-            $cache_name = $value->code . ':' . $value->expect . '===XingCaiCollect';
+            $cache_name = $value->enname . ':' . $value->expect . '===XingCaiCollect';
 
-            if (isset($this->model_mapping[$value->code]) === false) {
+            if (isset($this->model_mapping[$value->enname]) === false) {
                 continue;
             }
 
-            $lotto_name = $this->model_mapping[$value->code];
+            $lotto_name = $this->model_mapping[$value->enname];
             $model      = $this->lotto_mapping[$lotto_name];
             if (cache()->has($cache_name) === false) {
+                if ($lotto_name === 'xjssc') {
+                    $value->expect = substr($value->expect, 0, 8) . '0' . substr($value->expect, 8);
+                }
+
                 $data = [
                     'id'        => $value->expect,
                     'open_code' => $value->opencode,
