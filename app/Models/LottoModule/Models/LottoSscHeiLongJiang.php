@@ -12,8 +12,8 @@ class LottoSscHeiLongJiang extends BasicModel
     protected $configs = [
         'next_second'  => 1200,
         'first_second' => 37200,
-        'last_time'    => '22:42:00',
-        'first_time'   => '09:02:00',
+        'last_time'    => '22:40:00',
+        'first_time'   => '09:00:00',
         'incrementing' => true,
     ];
 
