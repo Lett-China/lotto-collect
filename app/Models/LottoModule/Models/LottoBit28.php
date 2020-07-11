@@ -176,7 +176,8 @@ class LottoBit28 extends BasicModel
             $open_code .= $source[$value];
         }
 
-        $formula = LottoFormula::bit28($open_code);
+        $formula     = LottoFormula::bit28($open_code);
+        $lotto_index = $this->lotto_name . ':' . $item->id;
 
         //如果随机到0 27 且没有控制 且有下注重新开始。
         if (in_array($formula['code_he'], [0, 27]) && in_array($item->control, ['he_00', 'he_27']) === false) {
