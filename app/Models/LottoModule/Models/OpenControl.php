@@ -5,7 +5,6 @@ namespace App\Models\LottoModule\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\LottoWinPlace;
-use App\Models\LottoModule\Models\BetLog;
 
 class OpenControl extends Model
 {
@@ -42,26 +41,27 @@ class OpenControl extends Model
 
     public function formulaBet($lotto_index, $open_code, $lotto_name = 'basic28')
     {
-        $bets = BetLog::remember(10)->where('lotto_index', $lotto_index)->with('details')->orderBy('id', 'desc')->get();
+        $bets = ControlBet::remember(10)->where('lotto_index', $lotto_index)->orderBy('id', 'desc')->get();
         if (count($bets->toArray()) === 0) {
             return true;
         }
 
-        $formula   = LottoFormula::$lotto_name($open_code);
-        $win_place = LottoWinPlace::lotto28($formula['code_str']);
+        $win_place = LottoWinPlace::lotto28($open_code, $lotto_name);
 
         $total_bonus = 0;
         $total_bet   = 0;
         foreach ($bets as $bet) {
-            $total_bet += $bet->total;
-            foreach ($bet->details as $value) {
-                if (!in_array($value->place, $win_place)) {
+            foreach ($bet->bet_places as $value) {
+                $total_bet += $value['amount'];
+                if (!in_array($value['place'], $win_place)) {
                     continue;
                 }
-                $odds = $value->odds;
-                $total_bonus += bcmul($value->amount, $odds, 2);
+                $odds = $value['odds'];
+                $total_bonus += bcmul($value['amount'], $odds, 2);
             }
         }
+
+        dump($total_bonus, $total_bet);
         return $total_bonus < $total_bet;
     }
 

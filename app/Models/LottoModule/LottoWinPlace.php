@@ -3,34 +3,18 @@ namespace App\Models\LottoModule;
 
 class LottoWinPlace
 {
-    public static function baccarat($code)
-    {
-        $result                                    = [];
-        $code % 2 == 0 && $result[]                = 'dob';
-        $code % 2 == 1 && $result[]                = 'sig';
-        $code >= 14 && $result[]                   = 'big';
-        $code <= 13 && $result[]                   = 'sml';
-        $code < 5 && $result[]                     = 'xsm';
-        $code > 22 && $result[]                    = 'xbg';
-        $code % 2 == 0 && $code >= 14 && $result[] = 'bdo';
-        $code % 2 == 1 && $code >= 14 && $result[] = 'bsg';
-        $code % 2 == 0 && $code <= 13 && $result[] = 'sdo';
-        $code % 2 == 1 && $code <= 13 && $result[] = 'ssg';
-        return $result;
-    }
-
     public static function kuai3($code)
     {
         $code = explode(',', $code);
         $he   = $code[0] + $code[1] + $code[2];
 
         $result   = [];
-        $result[] = 'he_' . sprintf('%02d', $he);
+        $result[] = 'qth_' . sprintf('%02d', $he);
 
-        $he % 2 == 0 && $result[] = 'he_dob';
-        $he % 2 == 1 && $result[] = 'he_sig';
-        $he >= 11 && $result[]    = 'he_big';
-        $he <= 10 && $result[]    = 'he_sml';
+        $he % 2 == 0 && $result[] = 'qth_dob';
+        $he % 2 == 1 && $result[] = 'qth_sig';
+        $he >= 11 && $result[]    = 'qth_big';
+        $he <= 10 && $result[]    = 'qth_sml';
 
         //是否为顺子
         asort($code);
@@ -41,21 +25,22 @@ class LottoWinPlace
 
         //是否为豹子
         $unique                           = array_unique($code);
-        count($unique) === 1 && $result[] = 'leo';
+        count($unique) === 1 && $result[] = 'qto_leo';
 
         //三军
         foreach (array_unique($code) as $value) {
-            $result[] = 'sj_' . $value;
+            $result[] = 'qtj_' . $value;
         }
 
         return $result;
     }
 
-    public static function lotto28($code)
+    public static function lotto28($open_code, $lotto_name)
     {
-        $code = explode(',', $code);
-        $he   = $code[0] + $code[1] + $code[2];
-        $win  = [];
+        $formula = LottoFormula::$lotto_name($open_code);
+
+        $he  = $formula['code_he'];
+        $win = [];
 
         $he % 2 == 0 && $win[]              = 'dob';
         $he % 2 == 1 && $win[]              = 'sig';
@@ -68,23 +53,37 @@ class LottoWinPlace
         $he % 2 == 0 && $he <= 13 && $win[] = 'sdo';
         $he % 2 == 1 && $he <= 13 && $win[] = 'ssg';
 
-        $result = [];
+        //36部分开奖
+        $code = $formula['code_arr'];
+        asort($code);
+        $code   = array_values($code);
+        $str    = implode('', $code);
+        $unique = array_unique($code);
+        $win_ts = 'oth'; //36玩法开奖 默认为杂
+
+        ($code[0] + 1 == $code[1] || $code[1] + 1 == $code[2] || ($code[0] == 0 && $code[2] == 9)) && $win_ts = 'juh'; //半顺
+        count($unique) === 2 && $win_ts                                                                       = 'pai'; //对
+        count($unique) === 1 && $win_ts                                                                       = 'leo'; //豹子
+        implode('', $code) === '019' && $win_ts                                                               = 'jun'; //019为顺
+        ($code[0] + 1 == $code[1] && $code[1] + 1 == $code[2]) && $win_ts                                     = 'jun'; //顺
+
+        $result   = [];
+        $result[] = 'ts_' . $win_ts;
+
         foreach ($win as $value) {
-            $result[] = 'ba_' . $value;
-
-            //外围玩法 13 14 组合吃掉
-            // if (in_array($code, ['13', '14']) && !in_array($value, ['dob', 'sig', 'big', 'sml'])) {
-            //     continue;
-            // }
-
             $result[] = 'ww_' . $value;
         }
+
         $result[] = 'he_' . sprintf('%02d', $he);
         $result[] = 'fd_' . sprintf('%02d', $he);
 
-        //胆拖
-        foreach (array_unique($code) as $value) {
-            $result[] = 'dt_' . $value;
+        //16玩法
+        $has_ext = ['ca28', 'cw28', 'de28', 'bj28'];
+        if (in_array($lotto_name, $has_ext)) {
+            $formula  = LottoFormula::basic16($open_code);
+            $result[] = 'st_' . sprintf('%02d', $formula['code_he']);
+            $formula  = LottoFormula::basic11($open_code);
+            $result[] = 'el_' . sprintf('%02d', $formula['code_he']);
         }
 
         return $result;
@@ -136,7 +135,7 @@ class LottoWinPlace
 
         //双面盘算法
         $smpFun = function ($num, $position) {
-            $prefix                                      = 'smp_' . sprintf('%02d', $position);
+            $prefix                                      = 'ssm_' . sprintf('%02d', $position);
             $result                                      = [];
             $num % 2 == 0 && $result[]                   = $prefix . '_dob';
             $num % 2 == 1 && $result[]                   = $prefix . '_sig';
@@ -161,14 +160,17 @@ class LottoWinPlace
         $he = 0;
         foreach ($code as $key => $value) {
             $he += $value;
-            $smp    = $smpFun($value, $key + 1, $result);
+            $smp    = $smpFun($value, $key + 1);
             $result = array_merge($result, $smp);
+
+            //定位胆
+            $result[] = 'sdw_' . sprintf('%02d', $key + 1) . '_' . $value;
         }
 
-        $he % 2 == 0 && $result[] = 'smp_he_dob';
-        $he % 2 == 1 && $result[] = 'smp_he_sig';
-        $he >= 23 && $result[]    = 'smp_he_big';
-        $he <= 22 && $result[]    = 'smp_he_sml';
+        $he % 2 == 0 && $result[] = 'ssm_he_dob';
+        $he % 2 == 1 && $result[] = 'ssm_he_sig';
+        $he >= 23 && $result[]    = 'ssm_he_big';
+        $he <= 22 && $result[]    = 'ssm_he_sml';
 
         //龙虎斗
         $result[] = $lhdFun('wq', $code[0], $code[1]);
