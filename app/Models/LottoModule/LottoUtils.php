@@ -43,6 +43,23 @@ class LottoUtils
         return $result;
     }
 
+    public static function XingCaiApiIssue($tag, $issue)
+    {
+        $uri = 'http://a.apilottery.com/api/7f9aa602dab0ed2866af8f4a5a8126b6/' . $tag . '/json?issue=' . $issue;
+
+        try {
+            $client      = new \GuzzleHttp\Client(['timeout' => 30]);
+            $response    = $client->get($uri, []);
+            $html        = $response->getBody();
+            $result      = json_decode($html);
+            $result->str = $html;
+        } catch (\Throwable $th) {
+            dump($th->getMessage());
+            return null;
+        }
+        return $result;
+    }
+
     public static function dataBeApi($row = 3)
     {
         $cache_name  = 'dataBeApi:Data';

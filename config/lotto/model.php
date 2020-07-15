@@ -24,16 +24,6 @@ $system = [
     'cqssc'   => 'App\Models\LottoModule\Models\LottoSscChongqing',
 ];
 
-//$collect为对应采集model
-$collect = [
-    'cakeno' => 'App\Models\LottoModule\Models\LottoKenoCa',
-    'bjkl8'  => 'App\Models\LottoModule\Models\LottoBeiJing8',
-    'bjpk10' => 'App\Models\LottoModule\Models\LottoPK10',
-];
-$collect = array_merge($collect, $system);
-unset($collect['ca28'], $collect['bj28'], $collect['pc28'], $collect['pk10']);
-
 return [
-    'collect' => $collect,
-    'system'  => $system,
+    'system' => $system,
 ];

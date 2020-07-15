@@ -26,11 +26,12 @@ class CollectXingCaiCommand extends Command
     {
         $this->info('collect xing_cai start');
         $source = LottoUtils::XingCaiApi();
-        // dd($source);
         if (!isset($source->rows) || $source->rows < 1) {
             $this->comment($source->str);
             return $this->error('error in data');
         }
+
+        $date = date('Y-m-d H:i', strtotime('-3 minute'));
 
         foreach ($source->data as $value) {
             $cache_name = $value->enname . ':' . $value->expect . '===XingCaiCollect';
@@ -41,6 +42,7 @@ class CollectXingCaiCommand extends Command
 
             $lotto_name = $this->model_mapping[$value->enname];
             $model      = $this->lotto_mapping[$lotto_name];
+
             if (cache()->has($cache_name) === false) {
                 if ($lotto_name === 'xjssc') {
                     $value->expect = substr($value->expect, 0, 8) . '0' . substr($value->expect, 8);
@@ -67,6 +69,30 @@ class CollectXingCaiCommand extends Command
 
             $message = $model . ' ' . $value->expect . ': ' . $result;
             $this->comment($message);
+
+            //卡奖处理
+            $lose = app($model)->where('lotto_at', '<=', $date)->where('status', 1)->first(['id', 'lotto_at']);
+            if ($lose === null) {continue;}
+            if ($lotto_name === 'xjssc') {
+                $lose->id = substr($source->expect, 0, 8) . substr($source->expect, 9);
+            }
+
+            $this->comment($value->enname . ' === ' . $lose->id . '   卡奖处理开始...');
+            $source = LottoUtils::XingCaiApiIssue($value->enname, $lose->id);
+            $source = $source->data[0];
+            if ($lotto_name === 'xjssc') {
+                $source->expect = substr($source->expect, 0, 8) . '0' . substr($source->expect, 8);
+            }
+
+            $data = [
+                'id'        => $source->expect,
+                'open_code' => $source->opencode,
+                'opened_at' => $source->opentime,
+            ];
+
+            $result = app($model)->lottoOpen($data);
+
+            $this->comment($value->enname . ' === ' . $lose->id . '   卡奖处理结束...' . $result);
         }
 
         return $this->info('collect xing_cai success');
