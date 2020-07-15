@@ -76,23 +76,27 @@ class CollectXingCaiCommand extends Command
             if ($lotto_name === 'xjssc') {
                 $lose->id = substr($source->expect, 0, 8) . substr($source->expect, 9);
             }
+            $this->comment($value->enname . ' === ' . $lose->id . ' 卡奖处理开始...');
+            try {
+                $source = LottoUtils::XingCaiApiIssue($value->enname, $lose->id);
+                $source = $source->data[0];
+                if ($lotto_name === 'xjssc') {
+                    $source->expect = substr($source->expect, 0, 8) . '0' . substr($source->expect, 8);
+                }
 
-            $this->comment($value->enname . ' === ' . $lose->id . '   卡奖处理开始...');
-            $source = LottoUtils::XingCaiApiIssue($value->enname, $lose->id);
-            $source = $source->data[0];
-            if ($lotto_name === 'xjssc') {
-                $source->expect = substr($source->expect, 0, 8) . '0' . substr($source->expect, 8);
+                $data = [
+                    'id'        => $source->expect,
+                    'open_code' => $source->opencode,
+                    'opened_at' => $source->opentime,
+                ];
+
+                $result = app($model)->lottoOpen($data);
+
+                $this->comment($value->enname . ' === ' . $lose->id . ' 卡奖处理结束...' . $result);
+            } catch (\Throwable $th) {
+                $this->comment($value->enname . ' === ' . $lose->id . ' 卡奖采集数据失败');
+                //throw $th;
             }
-
-            $data = [
-                'id'        => $source->expect,
-                'open_code' => $source->opencode,
-                'opened_at' => $source->opentime,
-            ];
-
-            $result = app($model)->lottoOpen($data);
-
-            $this->comment($value->enname . ' === ' . $lose->id . '   卡奖处理结束...' . $result);
         }
 
         return $this->info('collect xing_cai success');
