@@ -18,8 +18,7 @@ class CollectOwnCommand extends Command
     public function handle()
     {
         $this->info('collect own start');
-        $mapping = config('lotto.model.collect');
-
+        $mapping = config('lotto.model.system');
         //促发自有盘
         $self = ['hero28', 'de28'];
 

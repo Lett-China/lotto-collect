@@ -18,7 +18,7 @@ class LottoCreateCommand extends Command
     public function handle()
     {
         $this->info('lotto create start');
-        $mapping = config('lotto.model.collect');
+        $mapping = config('lotto.model.system');
         foreach ($mapping as $model) {
             try {
                 $result = app($model)->lottoCreate();
