@@ -30,7 +30,7 @@ class LottoChartController extends Controller
         $limit = request()->limit ?: 100;
 
         $last       = LottoUtils::model($request->name)->where('status', '2')->orderBy('id', 'desc')->first();
-        $cache_name = 'lottoTrendChart.' . $request->name . ':' . $last->id . '--' . $limit;
+        $cache_name = 'lottoTrendChart.' . $request->name . $request->chart . ':' . $last->id . '--' . $limit;
 
         $items = cache()->remember($cache_name, 86400, function () use ($request) {
             $model = new LottoChart();

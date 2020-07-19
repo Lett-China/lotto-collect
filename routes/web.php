@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get('/trend-chart', 'LottoChartController@index');
+Route::get('/trend-chart/{name}/{chart}', 'LottoChartController@index');
