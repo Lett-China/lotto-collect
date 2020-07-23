@@ -110,7 +110,7 @@
       var chart = "{{$request->chart}}"
       var name = "{{$request->name}}"
       if (v == "") return false
-      window.location.href = "/trend-chart?name="+name+"&chart="+chart+"&limit=" + v;
+      window.location.href = "/trend-chart/"+name+"/"+chart+"?limit=" + v;
 
     });
   });
