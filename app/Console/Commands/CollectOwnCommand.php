@@ -20,7 +20,7 @@ class CollectOwnCommand extends Command
         $this->info('collect own start');
         $mapping = config('lotto.model.system');
         //促发自有盘
-        $self = ['hero28', 'de28'];
+        $self = ['hero28', 'de28', 'india28'];
 
         foreach ($self as $value) {
             if (isset($mapping[$value]) === false) {
