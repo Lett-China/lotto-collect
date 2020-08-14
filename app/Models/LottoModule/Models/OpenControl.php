@@ -62,7 +62,7 @@ class OpenControl extends Model
         }
 
         dump($total_bonus, $total_bet);
-        return $total_bonus < $total_bet;
+        return $total_bonus - $total_bet;
     }
 
     public function openCode()
