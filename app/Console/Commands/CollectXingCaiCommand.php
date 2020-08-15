@@ -74,8 +74,9 @@ class CollectXingCaiCommand extends Command
             $lose = app($model)->where('lotto_at', '<=', $date)->where('status', 1)->first(['id', 'lotto_at']);
             if ($lose === null) {continue;}
             if ($lotto_name === 'xjssc') {
-                $lose->id = substr($source->expect, 0, 8) . substr($source->expect, 9);
+                $lose->id = substr($lose->id, 0, 8) . substr($lose->id, 9);
             }
+
             $this->comment($value->enname . ' === ' . $lose->id . ' 卡奖处理开始...');
             try {
                 $source = LottoUtils::XingCaiApiIssue($value->enname, $lose->id);
