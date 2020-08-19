@@ -17,5 +17,7 @@ class LottoSscHeiLongJiang extends BasicModel
         'incrementing' => true,
     ];
 
+    protected $lotto_name = 'hljssc';
+
     protected $table = 'lotto_ssc_heilongjiang';
 }

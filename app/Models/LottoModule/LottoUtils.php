@@ -1,6 +1,8 @@
 <?php
 namespace App\Models\LottoModule;
 
+use Illuminate\Support\Facades\DB;
+
 class LottoUtils
 {
     public static function Model($name = '')
@@ -96,6 +98,24 @@ class LottoUtils
             return $cache_data;
         }
         return $result;
+    }
+
+    public static function lottoOpenBroadcasts($name, $id)
+    {
+        $params = [
+            'name' => $name,
+            'id'   => $id,
+        ];
+
+        dump($params);
+        $uri      = DB::table('open_broadcasts')->get();
+        $client   = new \GuzzleHttp\Client(['timeout' => 5]);
+        $promises = [];
+        foreach ($uri as $value) {
+            $promises[] = $client->getAsync($value->uri, ['query' => $params]);
+        }
+
+        $results = \GuzzleHttp\Promise\unwrap($promises);
     }
 
     public static function openCaiAPI($code = '', $type = 'new', $extend = null, $row = 20)

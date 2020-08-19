@@ -2,6 +2,7 @@
 
 namespace App\Models\LottoModule\Traits;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\Models\LottoWarning;
 trait K3Trait
 {
@@ -69,6 +70,8 @@ trait K3Trait
         }
 
         $current->update($data);
+
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
 
         return 'update';
     }

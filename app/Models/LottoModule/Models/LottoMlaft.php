@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\Traits\RacingTrait;
 
 class LottoMlaft extends BasicModel
@@ -16,6 +17,8 @@ class LottoMlaft extends BasicModel
         'first_time'   => '13:04:00',
         'incrementing' => false,
     ];
+
+    protected $lotto_name = 'mlaft';
 
     protected $table = 'lotto_mlaft';
 
@@ -60,6 +63,7 @@ class LottoMlaft extends BasicModel
 
         $current->update($data);
 
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
         return 'update';
     }
 }

@@ -17,5 +17,7 @@ class LottoSscTianJin extends BasicModel
         'first_time'   => '09:20:00',
     ];
 
+    protected $lotto_name = 'tjssc';
+
     protected $table = 'lotto_ssc_tianjin';
 }

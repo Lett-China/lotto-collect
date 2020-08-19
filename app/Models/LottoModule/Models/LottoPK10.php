@@ -19,6 +19,8 @@ class LottoPK10 extends BasicModel
         'incrementing' => true,
     ];
 
+    protected $lotto_name = 'pk10';
+
     protected $table = 'lotto_pk10';
 
     public function lottoOpen($data)

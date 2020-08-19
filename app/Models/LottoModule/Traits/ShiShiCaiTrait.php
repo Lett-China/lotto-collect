@@ -2,6 +2,7 @@
 
 namespace App\Models\LottoModule\Traits;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\Models\LottoWarning;
 trait ShiShiCaiTrait
 {
@@ -73,6 +74,8 @@ trait ShiShiCaiTrait
         }
 
         $current->update($data);
+
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
 
         return 'update';
     }

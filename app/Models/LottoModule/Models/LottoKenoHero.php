@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\Traits\Lotto28Trait;
 
@@ -120,5 +121,7 @@ class LottoKenoHero extends BasicModel
         $item->opened_at = date('Y-m-d H:i:s');
         $item->status    = 2;
         $item->save();
+
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $item->id);
     }
 }

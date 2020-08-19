@@ -17,6 +17,8 @@ class LottoSscChongqing extends BasicModel
         'first_time'   => '00:30:00',
     ];
 
+    protected $lotto_name = 'cqssc';
+
     protected $table = 'lotto_ssc_chongqing';
 
     public function lottoCreate()

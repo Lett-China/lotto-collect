@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\Models\OpenControl;
 use App\Models\LottoModule\Traits\Lotto28Trait;
@@ -213,5 +214,7 @@ class LottoBit28 extends BasicModel
         $item->status    = 2;
         $item->logs      = $collect_uri;
         $temp            = $item->save();
+
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $item->id);
     }
 }

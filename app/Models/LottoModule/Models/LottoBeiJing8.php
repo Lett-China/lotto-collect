@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\Traits\Lotto28Trait;
 
 class LottoBeiJing8 extends BasicModel
@@ -92,6 +93,7 @@ class LottoBeiJing8 extends BasicModel
         }
 
         $current->update($data);
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
 
         return 'update';
     }

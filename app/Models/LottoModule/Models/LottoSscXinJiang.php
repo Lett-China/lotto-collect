@@ -17,5 +17,7 @@ class LottoSscXinJiang extends BasicModel
         'incrementing' => false,
     ];
 
+    protected $lotto_name = 'xjssc';
+
     protected $table = 'lotto_ssc_xinjiang';
 }

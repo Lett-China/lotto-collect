@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\Traits\Lotto28Trait;
 
 class LottoKenoCa extends BasicModel
@@ -154,6 +155,8 @@ class LottoKenoCa extends BasicModel
         if ($current->mark === 1 || $current->lotto_at === null) {
             $this->lottoAtUpdate();
         }
+
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
 
         return 'update';
     }

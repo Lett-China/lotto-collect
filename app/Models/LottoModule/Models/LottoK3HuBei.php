@@ -17,5 +17,7 @@ class LottoK3HuBei extends BasicModel
         'incrementing' => false,
     ];
 
+    protected $lotto_name = 'hubk3';
+
     protected $table = 'lotto_k3_hubei';
 }

@@ -17,5 +17,7 @@ class LottoK3JiangSu extends BasicModel
         'incrementing' => false,
     ];
 
+    protected $lotto_name = 'jsk3';
+
     protected $table = 'lotto_k3_jiangsu';
 }

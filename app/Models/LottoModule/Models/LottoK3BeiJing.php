@@ -17,5 +17,7 @@ class LottoK3BeiJing extends BasicModel
         'incrementing' => true,
     ];
 
+    protected $lotto_name = 'bjk3';
+
     protected $table = 'lotto_k3_beijing';
 }
