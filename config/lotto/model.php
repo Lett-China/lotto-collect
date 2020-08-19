@@ -21,7 +21,7 @@ $system = [
     'hubk3'   => 'App\Models\LottoModule\Models\LottoK3HuBei',
     'xjssc'   => 'App\Models\LottoModule\Models\LottoSscXinJiang',
     'tjssc'   => 'App\Models\LottoModule\Models\LottoSscTianJin',
-    'hljssc'  => 'App\Models\LottoModule\Models\LottoSscHeiLongJiang',
+    // 'hljssc'  => 'App\Models\LottoModule\Models\LottoSscHeiLongJiang',
     'cqssc'   => 'App\Models\LottoModule\Models\LottoSscChongqing',
 ];
 
