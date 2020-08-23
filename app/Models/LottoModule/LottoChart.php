@@ -9,6 +9,7 @@ class LottoChart
             'keno-28' => 'chartKeno28',
             'keno-16' => 'chartKeno16',
             'keno-11' => 'chartKeno11',
+            'keno-36' => 'chartKeno36',
         ];
 
         $fun = $mapping[$chart];
@@ -219,6 +220,49 @@ class LottoChart
         ];
 
         return $result;
+    }
+
+    public function chartKeno36()
+    {
+        {
+            $items = $this->items;
+
+            $limit = request()->limit ?: 100;
+
+            $_stand     = [10, 270, 60, 360, 300];
+            $code_place = ['ts_leo', 'ts_pai', 'ts_jun', 'ts_juh', 'ts_oth'];
+            $stand      = [];
+
+            foreach ($code_place as $key => $code) {
+                $stand[$code] = $_stand[$key];
+            }
+
+            $pro_stand = [];
+            $pro_real  = [];
+            foreach ($stand as $key => $value) {
+                $pro_stand[$key] = intval($stand[$key] / 1000 * $limit);
+                $pro_real[$key]  = 0;
+            }
+
+            foreach ($items as $item) {
+                $code = $item->win_place[0];
+                $pro_real[$code] += 1;
+                $chart            = ['code_ts' => $code, 'code_arr' => $item->win_extend['code_arr']];
+                $item['lotto_at'] = date('m-d H:i:s', strtotime($item['lotto_at']));
+                $item->chart      = $chart;
+                $item->makeHidden('win_extend');
+            }
+
+            $result = [
+                'items'      => $items->toArray(),
+                'code_place' => $code_place,
+                'pro_stand'  => $pro_stand,
+                'pro_real'   => $pro_real,
+
+            ];
+
+            return $result;
+        }
     }
 
     public function lotto($lotto_name)
