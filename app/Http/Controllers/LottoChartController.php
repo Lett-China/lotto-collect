@@ -24,6 +24,7 @@ class LottoChartController extends Controller
             'keno-28' => '28',
             'keno-16' => '16',
             'keno-11' => '11',
+            'keno-36' => '36',
         ];
 
         $title = $name[$request->name] . $chart[$request->chart];
@@ -40,7 +41,10 @@ class LottoChartController extends Controller
         $limit  = request()->limit ?: 100;
         $id_ass = $items['items'][0]['id'] % 5;
 
-        return view('keno', compact('items', 'limit', 'title', 'request', 'id_ass'));
+        if ($request->chart === 'keno-36') {
+            return view('keno-36', compact('items', 'limit', 'title', 'request', 'id_ass'));
+        }
 
+        return view('keno', compact('items', 'limit', 'title', 'request', 'id_ass'));
     }
 }
