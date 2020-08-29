@@ -21,6 +21,26 @@ class CollectKenoCaCommand extends Command
         $this->info('collect keno_ca start');
         $model = new LottoKenoCa();
         $model->officialCheck();
+
+        try {
+            //卡奖处理
+            $date = date('Y-m-d H:i', strtotime('-1 minute'));
+            $lose = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->first(['id', 'lotto_at']);
+            if ($lose === null) {
+                goto end;
+            }
+
+            $this->comment('加拿大Keno === ' . $lose->id . ' 卡奖处理开始...');
+            $model = new LottoKenoCa();
+            $model->officialCheck($lose->id);
+
+            $this->comment('加拿大Keno === ' . $lose->id . ' 卡奖处理结束...' . $result);
+        } catch (\Throwable $th) {
+            $this->comment('加拿大Keno === ' . $lose->id . ' 卡奖处理失败');
+            //throw $th;
+        }
+
+        end:
         return $this->info('collect keno_ca success');
     }
 }

@@ -161,13 +161,14 @@ class LottoKenoCa extends BasicModel
         return 'update';
     }
 
-    public function officialCheck()
+    public function officialCheck($id = null)
     {
         $client = new \GuzzleHttp\Client(['timeout' => 60]);
 
-        $uri = 'https://www.playnow.com/services2/keno/draw/2020-06-02/21/0';
-        $uri = 'https://www.playnow.com/services2/keno/draw/2576727/21';
-        $uri = 'https://www.playnow.com/services2/keno/draw/latest/10/0?time=' . time();
+        // $uri = 'https://www.playnow.com/services2/keno/draw/2020-06-02/21/0';
+        $uri        = 'https://www.playnow.com/services2/keno/draw/2576727/21';
+        $uri        = 'https://www.playnow.com/services2/keno/draw/latest/10/0?time=' . time();
+        $id && $uri = 'https://www.playnow.com/services2/keno/draw/' . $id . '/10';
 
         date_default_timezone_set('America/Vancouver');
 
@@ -181,15 +182,19 @@ class LottoKenoCa extends BasicModel
         }
         $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
 
-        $options  = ['proxy' => ['https' => $proxy_ip]];
-        $response = $client->get($uri, $options);
-        $data     = json_decode($response->getBody(), true);
-        dump($uri);
+        try {
+            $options  = ['proxy' => ['https' => $proxy_ip]];
+            $response = $client->get($uri, $options);
+            $data     = json_decode($response->getBody(), true);
+            dump($uri);
+        } catch (\Throwable $th) {
+            dump('加拿大Keno官方采集失败', $uri);
+            return false;
+        }
         if ($data == null) {
             dump('data null', $response->getBody());
             return false;
         }
-        dump($data);
         foreach ($data as $key => $value) {
             date_default_timezone_set('America/Vancouver');
             $datetime = $value['drawDate'] . ' ' . $value['drawTime'];
