@@ -12,7 +12,7 @@ class ControlBet extends Model
 
     protected $connection = 'lotto_data';
 
-    protected $fillable = ['user_id', 'lotto_index', 'bet_places'];
+    protected $fillable = ['user_id', 'lotto_index', 'bet_places', 'app_name'];
 
     protected $primaryKey = 'lotto_index';
 

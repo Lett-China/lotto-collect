@@ -122,6 +122,30 @@ class LottoKenoCw extends BasicModel
         return 'update';
     }
 
+    public function lottoOpenDrawNum($id)
+    {
+        $url = 'http://www.wclc.com/winning-numbers/keno.htm?drawNum=' . $id;
+
+        $table = QueryList::get($url)->find('.kenoTable');
+        $rows  = $table->find('tr:gt(0)')->map(function ($row) {
+            return $row->find('td')->texts()->all();
+        });
+
+        $items = array_reverse($rows->all());
+        foreach ($items as $item) {
+            $code = array_splice($item, 1);
+            $data = [
+                'id'        => $item[0],
+                'open_code' => implode(',', $code),
+            ];
+            $this->lottoOpenItem($data);
+        }
+
+        $this->lottoAtUpdate();
+
+        return 'update';
+    }
+
     public function lottoOpenItem($data)
     {
         $opened_at = date('Y-m-d H:i:s');

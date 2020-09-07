@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\LottoModule\LottoUtils;
+use App\Models\LottoModule\Models\ControlBet;
 use App\Models\LottoModule\Models\LottoBit28;
 
 class LottoController extends Controller
@@ -14,6 +15,18 @@ class LottoController extends Controller
         $data   = new LottoBit28();
         $result = $data->lottoCollectData();
         return real($result)->success();
+    }
+
+    public function control(Request $request)
+    {
+        $data = [
+            'lotto_index' => $request->lotto_index,
+            'bet_places'  => $request->bet_places,
+            'app_name'    => $request->app_name,
+        ];
+
+        $create = ControlBet::create($data);
+        return real()->success('创建成功');
     }
 
     public function openLog(Request $request)
