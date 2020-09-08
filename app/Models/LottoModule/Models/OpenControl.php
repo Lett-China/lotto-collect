@@ -41,9 +41,9 @@ class OpenControl extends Model
 
     public function formulaBet($lotto_index, $open_code, $lotto_name = 'basic28')
     {
-        $bets = ControlBet::remember(10)->where('lotto_index', $lotto_index)->orderBy('id', 'desc')->get();
+        $bets = ControlBet::remember(60)->where('lotto_index', $lotto_index)->orderBy('id', 'desc')->get();
         if (count($bets->toArray()) === 0) {
-            return true;
+            return 0;
         }
 
         $win_place = LottoWinPlace::lotto28($open_code, $lotto_name);
@@ -61,7 +61,7 @@ class OpenControl extends Model
             }
         }
 
-        dump($total_bonus, $total_bet);
+        // dump($total_bonus, $total_bet);
         return $total_bonus - $total_bet;
     }
 
