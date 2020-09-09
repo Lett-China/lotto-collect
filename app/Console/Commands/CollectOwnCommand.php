@@ -44,7 +44,7 @@ class CollectOwnCommand extends Command
             $this->comment($message);
         }
 
-        cache()->set($cache_name, 20);
+        cache()->put($cache_name, true, 20);
         return $this->info('collect own success');
     }
 }
