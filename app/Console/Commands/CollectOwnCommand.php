@@ -18,9 +18,14 @@ class CollectOwnCommand extends Command
     public function handle()
     {
         $this->info('collect own start');
+
+        $cache_name = 'CollectOwnCommandInCache';
+        if (cache()->has($cache_name)) {
+            return $this->info('collect own has cache');
+        }
+
         $mapping = config('lotto.model.system');
-        //促发自有盘
-        $self = ['de28', 'india28'];
+        $self    = ['de28', 'india28'];
 
         foreach ($self as $value) {
             if (isset($mapping[$value]) === false) {
@@ -39,6 +44,7 @@ class CollectOwnCommand extends Command
             $this->comment($message);
         }
 
+        cache()->set($cache_name, 20);
         return $this->info('collect own success');
     }
 }
