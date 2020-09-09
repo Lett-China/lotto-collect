@@ -24,7 +24,7 @@ class CollectKenoCwCommand extends Command
         $cw28    = app('App\Models\LottoModule\Models\LottoKenoCw');
         $is_null = $cw28->where('status', 1)->where('lotto_at', '<', date('Y-m-d H:i:s'))->count();
         if ($is_null > 0) {
-            $cw28->lottoOpen();
+            $cw28->lottoOpenOfficial();
             $this->comment('keno-cw open null items:' . $is_null);
         }
 

@@ -95,29 +95,48 @@ class LottoKenoCw extends BasicModel
         return $this->create($data);
     }
 
-    public function lottoOpen($date = null, $limit = 11)
+    public function lottoOpen($data)
     {
-        $date  = $date ?: date('m/d/Y');
-        $items = $this->collectData($date);
+        $lottoAtFix = function ($time) {
+            $time = strtotime($time);
+            $diff = floor($time / 300);
+            return date('Y-m-d H:i:s', $diff * 300);
+        };
 
-        if (count($items) === 0) {
-            $date  = date('m/d/Y', strtotime('yesterday'));
-            $items = $this->collectData($date);
+        $lotto_at = $lottoAtFix($data['opened_at']);
+
+        $current = $this->remember(1)->find($data['id']);
+
+        $data['status'] = 2;
+
+        if ($current == null) {
+            $data['lotto_at'] = $lotto_at;
+            $data['status']   = 2;
+            $this->create($data);
+            return 'create';
         }
 
-        $items = array_splice($items, 0, $limit);
-
-        foreach ($items as $item) {
-            $code = array_splice($item, 1);
-            $data = [
-                'id'        => $item[0],
-                'open_code' => implode(',', $code),
-            ];
-
-            $this->lottoOpenItem($data);
+        if ($current->status != 1) {
+            return 'status:' . $current->status;
         }
 
-        $this->lottoAtUpdate();
+        if ($current->lotto_at === null) {
+            $data['lotto_at'] = $lotto_at;
+        }
+
+        // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
+        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at) {
+            $warning_type = 'warning';
+            if ($current->lotto_at > $lotto_at) {
+                $data['status'] = 3;
+                $warning_type   = 'error';
+            }
+            LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
+        }
+
+        $current->update($data);
+
+        LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
 
         return 'update';
     }
@@ -174,6 +193,33 @@ class LottoKenoCw extends BasicModel
 
         $current->save();
         LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
+        return 'update';
+    }
+
+    public function lottoOpenOfficial($date = null, $limit = 11)
+    {
+        $date  = $date ?: date('m/d/Y');
+        $items = $this->collectData($date);
+
+        if (count($items) === 0) {
+            $date  = date('m/d/Y', strtotime('yesterday'));
+            $items = $this->collectData($date);
+        }
+
+        $items = array_splice($items, 0, $limit);
+
+        foreach ($items as $item) {
+            $code = array_splice($item, 1);
+            $data = [
+                'id'        => $item[0],
+                'open_code' => implode(',', $code),
+            ];
+
+            $this->lottoOpenItem($data);
+        }
+
+        $this->lottoAtUpdate();
+
         return 'update';
     }
 
