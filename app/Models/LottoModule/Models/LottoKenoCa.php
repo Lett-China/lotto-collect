@@ -245,6 +245,8 @@ class LottoKenoCa extends BasicModel
                 $current->open_code            = $open_code;
                 $current->status               = 2;
                 $has_error && $current->status = 3;
+                $current->opened_at            = date('Y-m-d H:i:s');
+                $current->logs                 = '从官方开奖';
                 $current->save();
                 dump($current->id . ':' . $current->open_code . ' open open_code');
                 continue;

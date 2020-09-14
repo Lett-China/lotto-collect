@@ -2,7 +2,7 @@
 
 $system = [
     'hero28'  => 'App\Models\LottoModule\Models\LottoKenoHero',
-    'india28' => 'App\Models\LottoModule\Models\LottoKenoIndia',
+    'in28'    => 'App\Models\LottoModule\Models\LottoKenoIndia',
     'ca28'    => 'App\Models\LottoModule\Models\LottoKenoCa',
     'cw28'    => 'App\Models\LottoModule\Models\LottoKenoCw',
     'keno-cw' => 'App\Models\LottoModule\Models\LottoKenoCw',

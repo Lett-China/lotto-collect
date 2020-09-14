@@ -11,7 +11,7 @@ class LottoKenoIndia extends BasicModel
 
     public $rememberCacheTag = 'lotto_keno_india';
 
-    protected $lotto_name = 'india28';
+    protected $lotto_name = 'in28';
 
     protected $table = 'lotto_keno_india';
 
@@ -88,10 +88,13 @@ class LottoKenoIndia extends BasicModel
         }
 
         //根据下注额控制
+        dump($lotto_index);
         $control_val = $control->formulaBet($lotto_index, $open_code, $this->lotto_name);
-        if ($count <= 10) {
-            if (($item->control === 'bet' && $control_val >= 10) || $control_val >= 1000) {
+        dump('印度28 预估中奖：' . $control_val);
+        if ($count <= 20) {
+            if (($item->control === 'bet' && $control_val >= 0.01) || $control_val >= 1000) {
                 $count += 1;
+                dump('印度28 下注控制重新开奖');
                 goto start;
             }
         }

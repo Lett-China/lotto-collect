@@ -25,7 +25,7 @@ class CollectOwnCommand extends Command
         }
 
         $mapping = config('lotto.model.system');
-        $self    = ['de28', 'india28'];
+        $self    = ['de28', 'in28'];
 
         foreach ($self as $value) {
             if (isset($mapping[$value]) === false) {
