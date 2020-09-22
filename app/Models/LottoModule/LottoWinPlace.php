@@ -37,7 +37,6 @@ class LottoWinPlace
 
     public static function lotto28($open_code, $lotto_name)
     {
-        dump($lotto_name);
         $formula = LottoFormula::$lotto_name($open_code);
 
         $he  = $formula['code_he'];
@@ -66,6 +65,7 @@ class LottoWinPlace
         count($unique) === 2 && $win_ts                                                                       = 'pai'; //对
         count($unique) === 1 && $win_ts                                                                       = 'leo'; //豹子
         implode('', $code) === '019' && $win_ts                                                               = 'jun'; //019为顺
+        implode('', $code) === '089' && $win_ts                                                               = 'jun'; //019为顺
         ($code[0] + 1 == $code[1] && $code[1] + 1 == $code[2]) && $win_ts                                     = 'jun'; //顺
 
         $result   = [];

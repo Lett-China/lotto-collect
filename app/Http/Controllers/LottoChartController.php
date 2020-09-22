@@ -18,6 +18,7 @@ class LottoChartController extends Controller
             'de28'  => '德国',
             'bj28'  => '北京',
             'pc28'  => '蛋蛋',
+            'in28'  => '印度',
         ];
 
         $chart = [
