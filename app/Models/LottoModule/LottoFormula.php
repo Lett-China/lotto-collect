@@ -6,7 +6,7 @@ class LottoFormula
     public static function __callStatic($name, $arguments)
     {
         $param   = $arguments[0];
-        $basic28 = config('lotto.base')['formula_basic28'];
+        $basic28 = config('lotto.base.formula_basic28');
 
         if (in_array($name, $basic28)) {
             return self::basic28($param);

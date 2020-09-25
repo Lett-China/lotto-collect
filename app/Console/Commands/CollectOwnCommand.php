@@ -25,7 +25,7 @@ class CollectOwnCommand extends Command
         }
 
         $mapping = config('lotto.model.system');
-        $self    = config('lotto.base')['collect_own'];
+        $self    = config('lotto.base.collect_own');
 
         foreach ($self as $value) {
             if (isset($mapping[$value]) === false) {

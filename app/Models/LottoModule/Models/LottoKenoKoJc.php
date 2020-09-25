@@ -11,7 +11,7 @@ class LottoKenoKoJc extends BasicModel
 
     public $rememberCacheTag = 'lotto_keno_ko_jc';
 
-    protected $lotto_name = 'ko28';
+    protected $lotto_name = 'kojc28';
 
     protected $table = 'lotto_keno_ko_jc';
 

@@ -12,13 +12,14 @@ class LottoChartController extends Controller
     public function index(Request $request)
     {
         $name = [
-            'ca28'  => '加拿大',
-            'cw28'  => '加拿大西部',
-            'bit28' => '比特币',
-            'de28'  => '德国',
-            'bj28'  => '北京',
-            'pc28'  => '蛋蛋',
-            'in28'  => '印度',
+            'ca28'   => '加拿大',
+            'cw28'   => '加拿大西部',
+            'bit28'  => '比特币',
+            'kojc28' => '韩国',
+            'de28'   => '德国',
+            'bj28'   => '北京',
+            'pc28'   => '蛋蛋',
+            'in28'   => '印度',
         ];
 
         $chart = [
