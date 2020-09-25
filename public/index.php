@@ -8,9 +8,9 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
-if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
-    $_SERVER['HTTP_X_FORWARDED_FOR'] = implode(',', array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
-}
+// if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
+//     $_SERVER['HTTP_X_FORWARDED_FOR'] = implode(',', array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+// }
 
 define('LARAVEL_START', microtime(true));
 
