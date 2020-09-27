@@ -19,6 +19,7 @@ class LottoCreateCommand extends Command
     {
         $this->info('lotto create start');
         $mapping = config('lotto.model.system');
+
         foreach ($mapping as $model) {
             try {
                 $result = app($model)->lottoCreate();
