@@ -190,7 +190,7 @@ class LottoBit28 extends BasicModel
 
         //根据下注额控制
         $control_val = $control->formulaBet($lotto_index, $open_code, $this->lotto_name);
-        if ($count <= 10) {
+        if ($count <= 30) {
             if (($item->control === 'bet' && $control_val > 0) || $control_val >= 1000) {
                 $count += 1;
                 goto start;
