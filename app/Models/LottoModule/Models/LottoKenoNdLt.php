@@ -32,7 +32,7 @@ class LottoKenoNdLt extends BasicModel
         $new_id    = $last_lotto->id + 1;
         if ($next_time < time()) {
             $time_a    = time();
-            $time_b    = strtotime('2019-11-06') + 30;
+            $time_b    = strtotime('2020-07-01');
             $diff      = intval(($time_a - $time_b) / 60) + 1;
             $new_id    = 100000 + $diff;
             $next_time = $diff * 60 + $time_b;
