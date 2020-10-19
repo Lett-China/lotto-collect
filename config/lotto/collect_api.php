@@ -11,9 +11,9 @@ $xing_cai = [
     'shk3'     => 'shk3',
     'jsk3'     => 'jsk3',
     'xjssc'    => 'xjssc',
-    // 'hljssc' => 'hljssc',
     'bjk3'     => 'bjk3',
     'jndxbhl8' => 'cw28',
+    'twbgc'    => 'tw28',
 ];
 
 $result = [

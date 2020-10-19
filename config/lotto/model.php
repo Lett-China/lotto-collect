@@ -7,6 +7,7 @@ $system = [
     'cw28'    => 'App\Models\LottoModule\Models\LottoKenoCw',
     'keno-cw' => 'App\Models\LottoModule\Models\LottoKenoCw',
     'de28'    => 'App\Models\LottoModule\Models\LottoKenoDe',
+    'tw28'    => 'App\Models\LottoModule\Models\LottoBingoTw',
     'kojc28'  => 'App\Models\LottoModule\Models\LottoKenoKoJc',
     'kolt28'  => 'App\Models\LottoModule\Models\LottoKenoKoLt',
     'ndlt28'  => 'App\Models\LottoModule\Models\LottoKenoNdLt',
