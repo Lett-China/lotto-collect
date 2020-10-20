@@ -12,7 +12,7 @@ class LottoBingoTw extends BasicModel
 
     protected $configs = [
         'next_second'  => 300,
-        'first_second' => 26100,
+        'first_second' => 25800,
         'last_time'    => '23:55:00',
         'first_time'   => '07:05:00',
         'incrementing' => true,
