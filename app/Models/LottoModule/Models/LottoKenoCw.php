@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\LottoModule\Models;
 
 use QL\QueryList;
@@ -143,9 +144,22 @@ class LottoKenoCw extends BasicModel
 
     public function lottoOpenDrawNum($id)
     {
+        $client = new \GuzzleHttp\Client(['timeout' => 60]);
         $url = 'http://www.wclc.com/winning-numbers/keno.htm?drawNum=' . $id;
+        $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
+        $response   = $client->get($proxy_uri);
+        $proxy_data = json_decode($response->getBody(), true);
 
-        $table = QueryList::get($url)->find('.kenoTable');
+        if ($proxy_data['code'] !== 0) {
+            dump($proxy_data['msg']);
+            return false;
+        }
+        $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
+        $urlParams = [];
+        $opts = [
+            'proxy' => $proxy_ip,
+        ];
+        $table = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
         $rows  = $table->find('tr:gt(0)')->map(function ($row) {
             return $row->find('td')->texts()->all();
         });
@@ -225,9 +239,21 @@ class LottoKenoCw extends BasicModel
 
     private function collectData($date)
     {
+        $client = new \GuzzleHttp\Client(['timeout' => 60]);
         $url = 'http://www.wclc.com/winning-numbers/keno.htm?selDate=' . $date;
-
-        $table = QueryList::get($url)->find('.kenoTable');
+        $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
+        $response   = $client->get($proxy_uri);
+        $proxy_data = json_decode($response->getBody(), true);
+        if ($proxy_data['code'] !== 0) {
+            dump($proxy_data['msg']);
+            return false;
+        }
+        $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
+        $urlParams = [];
+        $opts = [
+            'proxy' => $proxy_ip,
+        ];
+        $table = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
         $rows  = $table->find('tr:gt(0)')->map(function ($row) {
             return $row->find('td')->texts()->all();
         });
