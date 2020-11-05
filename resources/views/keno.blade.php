@@ -16,6 +16,17 @@
   .content-wrap {
     box-shadow: none;
     padding: 0;
+    margin: 0 0 !important;
+  }
+
+  .header-title {
+    line-height: 20px;
+    margin-bottom: 10px;
+    border-bottom: 0 !important;
+  }
+
+  .select {
+    top: 0 !important;
   }
 
   .table {
