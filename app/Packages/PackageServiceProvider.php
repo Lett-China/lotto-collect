@@ -13,7 +13,7 @@ class PackageServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        require_once __DIR__ . '/Utils/Helpers.php';
+        require_once __DIR__ . '/Methods/autoload.php';
 
         //解决安装数据库部分语句
         Schema::defaultStringLength(191);

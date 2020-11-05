@@ -49,12 +49,8 @@ class LottoBit28 extends BasicModel
     public function lottoCollectData()
     {
         $backup = function () {
-            $client     = new \GuzzleHttp\Client(['timeout' => 10]);
-            $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=1&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=www&n=0&f=1';
-            $response   = $client->get($proxy_uri);
-            $proxy_data = json_decode($response->getBody(), true);
-            $proxy_ip   = $proxy_data['data'][0]['ip'] . ':' . $proxy_data['data'][0]['port'];
-            dump($proxy_ip);
+            $client   = new \GuzzleHttp\Client(['timeout' => 10]);
+            $proxy_ip = getProxyIP('bit');
             $uri      = 'https://etherscan.io/txsPending';
             $option   = ['proxy' => ['http' => $proxy_ip]];
             $response = $client->get($uri, $option);

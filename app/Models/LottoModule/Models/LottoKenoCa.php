@@ -164,7 +164,6 @@ class LottoKenoCa extends BasicModel
     public function officialCheck($id = null)
     {
         $client = new \GuzzleHttp\Client(['timeout' => 60]);
-
         // $uri = 'https://www.playnow.com/services2/keno/draw/2020-06-02/21/0';
         $uri        = 'https://www.playnow.com/services2/keno/draw/2576727/21';
         $uri        = 'https://www.playnow.com/services2/keno/draw/latest/10/0?time=' . time();
@@ -172,15 +171,7 @@ class LottoKenoCa extends BasicModel
 
         date_default_timezone_set('America/Vancouver');
 
-        $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
-        $response   = $client->get($proxy_uri);
-        $proxy_data = json_decode($response->getBody(), true);
-
-        if ($proxy_data['code'] !== 0) {
-            dump($proxy_data['msg']);
-            return false;
-        }
-        $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
+        $proxy_ip = getProxyIP('ca');
 
         try {
             $options  = ['proxy' => ['https' => $proxy_ip]];
