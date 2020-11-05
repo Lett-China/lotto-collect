@@ -109,7 +109,7 @@ class LottoUtils
 
         dump($params);
         $uri      = DB::table('open_broadcasts')->get();
-        $client   = new \GuzzleHttp\Client(['timeout' => 5]);
+        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
         $promises = [];
         foreach ($uri as $value) {
             $promises[] = $client->getAsync($value->uri, ['query' => $params]);

@@ -144,8 +144,8 @@ class LottoKenoCw extends BasicModel
 
     public function lottoOpenDrawNum($id)
     {
-        $client = new \GuzzleHttp\Client(['timeout' => 60]);
-        $url = 'http://www.wclc.com/winning-numbers/keno.htm?drawNum=' . $id;
+        $client     = new \GuzzleHttp\Client(['timeout' => 60]);
+        $url        = 'http://www.wclc.com/winning-numbers/keno.htm?drawNum=' . $id;
         $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
         $response   = $client->get($proxy_uri);
         $proxy_data = json_decode($response->getBody(), true);
@@ -154,9 +154,9 @@ class LottoKenoCw extends BasicModel
             dump($proxy_data['msg']);
             return false;
         }
-        $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
+        $proxy_ip  = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
         $urlParams = [];
-        $opts = [
+        $opts      = [
             'proxy' => $proxy_ip,
         ];
         $table = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
@@ -198,6 +198,7 @@ class LottoKenoCw extends BasicModel
         $current->opened_at = $opened_at;
         $current->status    = 2;
         $current->open_code = $data['open_code'];
+        $current->logs      = '从官方开奖';
 
         // 提前开奖标示为异常
         if ($current->lotto_at !== null && $current->lotto_at > $opened_at) {
@@ -239,8 +240,8 @@ class LottoKenoCw extends BasicModel
 
     private function collectData($date)
     {
-        $client = new \GuzzleHttp\Client(['timeout' => 60]);
-        $url = 'http://www.wclc.com/winning-numbers/keno.htm?selDate=' . $date;
+        $client     = new \GuzzleHttp\Client(['timeout' => 60]);
+        $url        = 'http://www.wclc.com/winning-numbers/keno.htm?selDate=' . $date;
         $proxy_uri  = 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0';
         $response   = $client->get($proxy_uri);
         $proxy_data = json_decode($response->getBody(), true);
@@ -248,9 +249,9 @@ class LottoKenoCw extends BasicModel
             dump($proxy_data['msg']);
             return false;
         }
-        $proxy_ip = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
+        $proxy_ip  = $proxy_data['data'][1]['ip'] . ':' . $proxy_data['data'][1]['port'];
         $urlParams = [];
-        $opts = [
+        $opts      = [
             'proxy' => $proxy_ip,
         ];
         $table = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
