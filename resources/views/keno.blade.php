@@ -3,12 +3,40 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9" />
 
 <!-- <link rel="stylesheet" href="{{ URL::asset("css/trend.css") }}"> -->
-<link rel="stylesheet" href="https://yf-28.oss-cn-hongkong.aliyuncs.com/trend-chart/trend.css">
-<title>{{$title}} - 走势图</title>
 
+<link rel="stylesheet" href="https://yf-28.oss-cn-hongkong.aliyuncs.com/trend-chart/trend.css">
+
+<title>{{$title}} - 走势图</title>
+@if($request->iframe)
 <style>
-  .table tr:nth-child(5n + {{$id_ass + 1}}) td{border-bottom-color: #e4e6e7;}
+  body {
+    background: white;
+  }
+
+  .content-wrap {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .table {
+    min-width: 998px !important;
+
+  }
 </style>
+@endif
+<style>
+  .table tr:nth-child(5n + {
+        {
+        $id_ass + 1
+      }
+    }
+
+  ) td {
+    border-bottom-color: #e4e6e7;
+  }
+</style>
+
+
 
 <div class="content-wrap">
   <div class="header-title">
@@ -104,13 +132,13 @@
 
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-  $(document).ready(function () {
-    $("#limit-select").change(function () {
+  $(document).ready(function() {
+    $("#limit-select").change(function() {
       var v = $("#limit-select").val()
       var chart = "{{$request->chart}}"
       var name = "{{$request->name}}"
       if (v == "") return false
-      window.location.href = "/trend-chart/"+name+"/"+chart+"?limit=" + v;
+      window.location.href = "/trend-chart/" + name + "/" + chart + "?limit=" + v;
 
     });
   });
