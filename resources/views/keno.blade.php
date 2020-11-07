@@ -113,9 +113,11 @@
 
         <tr>
           <td>{{$item["short_id"]}}</td>
-
+          @if($request->iframe)
+          <td>{{substr($item["lotto_at"],-8)}}</td>
+          @else
           <td>{{$item["lotto_at"]}}</td>
-
+          @endif
           @foreach ($items["code_place"] as $code)
           <td>@if($item["chart"]["win_he"] == $code)<span class="code-item">{{$code}}</span>@endif</td>
           @endforeach
