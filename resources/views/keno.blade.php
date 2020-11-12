@@ -146,13 +146,34 @@
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#limit-select").change(function() {
-      var v = $("#limit-select").val()
-      var chart = "{{$request->chart}}"
-      var name = "{{$request->name}}"
-      if (v == "") return false
-      window.location.href = "/trend-chart/" + name + "/" + chart + "?limit=" + v;
+        var time = setInterval(() => {
+          var tbody = document.body
 
-    });
-  });
+          var height = tbody.scrollHeight
+          console.log(height)
+          window.parent.postMessage({
+            height: height,
+
+          }, '*')
+          if (height > 0) {
+
+            clearInterval(time);
+          }
+        }, 2000);
+
+
+
+        $("#limit-select").change(function() {
+          var v = $("#limit-select").val()
+          var chart = "{{$request->chart}}"
+          var name = "{{$request->name}}"
+          var iframe = "{{$request->iframe}}"
+          if (v == "") return false
+          if (iframe) {
+            window.location.href = "/trend-chart/" + name + "/" + chart + "/frame?limit=" + v;
+          } else {
+            window.location.href = "/trend-chart/" + name + "/" + chart + "?limit=" + v;
+          }
+
+        });
 </script>
