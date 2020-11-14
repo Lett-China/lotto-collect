@@ -150,7 +150,7 @@
       var tbody = document.body
 
       var height = tbody.scrollHeight
-      console.log(height)
+
       window.parent.postMessage({
         height: height,
 
