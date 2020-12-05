@@ -113,9 +113,11 @@
 
         <tr>
           <td>{{$item["short_id"]}}</td>
-
+          @if($request->iframe)
+          <td>{{substr($item["lotto_at"],-8)}}</td>
+          @else
           <td>{{$item["lotto_at"]}}</td>
-
+          @endif
           @foreach ($items["code_place"] as $code)
           <td>@if($item["chart"]["win_he"] == $code)<span class="code-item">{{$code}}</span>@endif</td>
           @endforeach
@@ -144,12 +146,34 @@
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
+    var time = setInterval(() => {
+      var tbody = document.body
+
+      var height = tbody.scrollHeight
+
+      window.parent.postMessage({
+        height: height,
+
+      }, '*')
+      if (height > 0) {
+
+        clearInterval(time);
+      }
+    }, 2000);
+
+
+
     $("#limit-select").change(function() {
       var v = $("#limit-select").val()
       var chart = "{{$request->chart}}"
       var name = "{{$request->name}}"
+      var iframe = "{{$request->iframe}}"
       if (v == "") return false
-      window.location.href = "/trend-chart/" + name + "/" + chart + "?limit=" + v;
+      if (iframe) {
+        window.location.href = "/trend-chart/" + name + "/" + chart + "/frame?limit=" + v;
+      } else {
+        window.location.href = "/trend-chart/" + name + "/" + chart + "?limit=" + v;
+      }
 
     });
   });
