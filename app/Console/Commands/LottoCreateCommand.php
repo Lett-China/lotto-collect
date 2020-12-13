@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 
 class LottoCreateCommand extends Command
 {
+    protected $continue = ['jsk3', 'shk3', 'hebk3', 'cqssc', 'tjssc', 'bj28', 'pk10', 'pc28', 'mlaft', 'bjk3', 'hero28'];
+
     protected $description = 'lotto create';
 
     protected $signature = 'lotto:create';
@@ -20,7 +22,12 @@ class LottoCreateCommand extends Command
         $this->info('lotto create start');
         $mapping = config('lotto.model.system');
 
-        foreach ($mapping as $model) {
+        foreach ($mapping as $key => $model) {
+            if (in_array($key, $this->continue)) {
+                $this->comment($key . '跳出创建');
+                continue;
+            }
+
             try {
                 $result = app($model)->lottoCreate();
             } catch (\Throwable $th) {
