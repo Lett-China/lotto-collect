@@ -34,10 +34,10 @@ class CollectKenoCaCommand extends Command
             $model = new LottoKenoCa();
             $model->officialCheck($lose->id);
 
-            $this->comment('加拿大Keno === ' . $lose->id . ' 卡奖处理结束...' . $result);
+            $this->comment('加拿大Keno === ' . $lose->id . ' 卡奖处理结束...');
         } catch (\Throwable $th) {
             $this->comment('加拿大Keno === ' . $lose->id . ' 卡奖处理失败');
-            //throw $th;
+            throw $th;
         }
 
         end:
