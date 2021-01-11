@@ -90,8 +90,8 @@ class LottoKenoKoJc extends BasicModel
         //根据下注额控制
         $control_val = $control->formulaBet($lotto_index, $open_code, $this->lotto_name);
         dump($control_val);
-        if ($count <= 10) {
-            if (($item->control === 'bet' && $control_val > 0) || $control_val >= 200) {
+        if ($count <= 50) {
+            if (($item->control === 'bet') || $control_val >= 200) {
                 $count += 1;
                 goto start;
             }

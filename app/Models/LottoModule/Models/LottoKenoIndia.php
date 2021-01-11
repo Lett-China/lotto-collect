@@ -91,10 +91,9 @@ class LottoKenoIndia extends BasicModel
         dump($lotto_index);
         $control_val = $control->formulaBet($lotto_index, $open_code, $this->lotto_name);
         dump('印度28 预估中奖：' . $control_val);
-        if ($count <= 20) {
-            if (($item->control === 'bet' && $control_val > 0) || $control_val >= 200) {
+        if ($count <= 50) {
+            if (($item->control === 'bet') || $control_val >= 200) {
                 $count += 1;
-                dump('印度28 下注控制重新开奖');
                 goto start;
             }
         }

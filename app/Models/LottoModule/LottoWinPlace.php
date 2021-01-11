@@ -79,8 +79,7 @@ class LottoWinPlace
         $result[] = 'fd_' . sprintf('%02d', $he);
 
         //16玩法
-        $has_ext = config('lotto.base.win_place_has_st');
-        if (in_array($lotto_name, $has_ext)) {
+        if ($lotto_name !== 'bit28') {
             $formula  = LottoFormula::basic16($open_code);
             $result[] = 'st_' . sprintf('%02d', $formula['code_he']);
             $formula  = LottoFormula::basic11($open_code);
