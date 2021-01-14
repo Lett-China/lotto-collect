@@ -90,7 +90,7 @@ class LottoKenoHero extends BasicModel
         //根据下注额控制
         $control_val = $control->formulaBet($lotto_index, $open_code, $this->lotto_name);
         if ($count <= 50) {
-            if (($item->control === 'bet') || $control_val >= 200) {
+            if (($item->control === 'bet' && $control_val > 0) || $control_val >= 200) {
                 $count += 1;
                 goto start;
             }
