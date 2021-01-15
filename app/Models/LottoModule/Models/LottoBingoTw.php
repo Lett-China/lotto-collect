@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use QL\QueryList;
 use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\Traits\Lotto28Trait;
 
@@ -58,5 +59,71 @@ class LottoBingoTw extends BasicModel
         LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
 
         return 'update';
+    }
+
+    public function lottoOpenItem($data)
+    {
+        $opened_at = date('Y-m-d H:i:s');
+        $current   = $this->find($data['id']);
+
+        if ($current == null) {
+            $data['status']    = 2;
+            $data['opened_at'] = $opened_at;
+            $this->create($data);
+            return 'create';
+        }
+
+        if ($current->status != 1) {
+            return 'status:' . $current->status;
+        }
+
+        $current->opened_at = $opened_at;
+        $current->status    = 2;
+        $current->open_code = $data['open_code'];
+        $current->logs      = '从官方开奖';
+
+        // 提前开奖标示为异常
+        if ($current->lotto_at !== null && $current->lotto_at > $opened_at) {
+            $current->extend = ['lotto_at' => $lotto_at];
+            $current->status = 3;
+        }
+
+        $current->save();
+        // LottoUtils::lottoOpenBroadcasts($this->lotto_name, $current->id);
+        return 'update';
+    }
+
+    public function lottoOpenOfficial()
+    {
+        $client = new \GuzzleHttp\Client(['timeout' => 60]);
+        $url    = 'https://www.taiwanlottery.com.tw/lotto/BingoBingo/drawing.aspx';
+        // $proxy_ip  = getProxyIP('tw');
+        $urlParams = [];
+        // $opts      = ['proxy' => $proxy_ip];
+        $opts  = [];
+        $table = QueryList::get($url, $urlParams, $opts)->find('.tableFull');
+        $rows  = $table->find('tr:gt(0)')->map(function ($row) {
+            return $row->find('td')->texts()->all();
+        });
+
+        $items = $rows->all();
+
+        $result = [];
+
+        foreach ($items as $value) {
+            if ($value[0] < 11000000) {
+                continue;
+            }
+
+            $code = explode(' ', $value[1]);
+            $code = array_filter($code);
+            $code = implode(',', $code);
+
+            $data = ['id' => $value[0], 'open_code' => $code];
+
+            $this->lottoOpenItem($data);
+        }
+
+        return true;
     }
 }

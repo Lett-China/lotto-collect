@@ -31,6 +31,8 @@ class CollectXingCaiCommand extends Command
             return $this->error('error in data');
         }
 
+        dump($source);
+
         $date = date('Y-m-d H:i', strtotime('-3 minute'));
 
         foreach ($source->data as $value) {
