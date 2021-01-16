@@ -8,6 +8,7 @@ function getProxyIP($country = 'ca')
         'ca'  => 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=ca&n=0',
         'bit' => 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&pro=0&city=0&yys=0&port=1&flow=1&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=0&regions=www&n=0&f=1',
         'tw'  => 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&lb=1&sb=0&flow=1&regions=tw&n=0',
+        'us'  => 'http://tiqu.linksocket.com:81/abroad?num=2&type=2&lb=1&sb=0&flow=1&regions=us&n=0',
     ];
 
     $proxy_uri  = $uris[$country];
@@ -23,7 +24,7 @@ function getProxyIP($country = 'ca')
     }
 
     if ($proxy_data['code'] !== 0) {
-        dump($proxy_data['msg']);
+        dump($proxy_data['msg'] . ' ====');
         return false;
     }
 

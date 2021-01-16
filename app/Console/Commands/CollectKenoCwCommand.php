@@ -20,6 +20,10 @@ class CollectKenoCwCommand extends Command
     {
         $this->info('collect keno_cw start');
 
+        if (date('i') % 5 == 0) {
+            sleep(10);
+        }
+
         //加拿大西部28开奖
         $cw28    = app('App\Models\LottoModule\Models\LottoKenoCw');
         $is_null = $cw28->where('status', 1)->where('lotto_at', '<', date('Y-m-d H:i:s'))->count();

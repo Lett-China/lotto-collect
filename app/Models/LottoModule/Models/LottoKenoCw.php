@@ -144,13 +144,15 @@ class LottoKenoCw extends BasicModel
 
     public function lottoOpenDrawNum($id)
     {
-        $client    = new \GuzzleHttp\Client(['timeout' => 60]);
-        $url       = 'http://www.wclc.com/winning-numbers/keno.htm?drawNum=' . $id;
-        $proxy_ip  = getProxyIP('ca');
-        $urlParams = [];
-        $opts      = ['proxy' => $proxy_ip];
-        $table     = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
-        $rows      = $table->find('tr:gt(0)')->map(function ($row) {
+        $url = 'http://www.wclc.com/winning-numbers/keno.htm?channel=print&drawNum=' . $id;
+        // $proxy_ip  = getProxyIP('ca');
+        // $urlParams = [];
+        // $opts      = ['proxy' => $proxy_ip];
+        // $table     = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
+
+        $html  = file_get_contents($url);
+        $table = QueryList::html($html)->find('.kenoTable');
+        $rows  = $table->find('tr:gt(0)')->map(function ($row) {
             return $row->find('td')->texts()->all();
         });
 
@@ -230,18 +232,19 @@ class LottoKenoCw extends BasicModel
 
     private function collectData($date)
     {
-        $client    = new \GuzzleHttp\Client(['timeout' => 60]);
-        $url       = 'http://www.wclc.com/winning-numbers/keno.htm?selDate=' . $date;
-        $proxy_ip  = getProxyIP('ca');
-        $urlParams = [];
-        $opts      = ['proxy' => $proxy_ip];
-        $table     = QueryList::get($url, $urlParams, $opts)->find('.kenoTable');
-        $rows      = $table->find('tr:gt(0)')->map(function ($row) {
+        $url = 'https://www.wclc.com/winning-numbers/keno.htm?channel=print&selDate=' . $date;
+        // $proxy_ip  = getProxyIP('ca');
+        // $opts      = ['proxy' => $proxy_ip];
+        // $table = QueryList::get($url, [], $opts)->find('.kenoTable');
+
+        $html  = file_get_contents($url);
+        $table = QueryList::html($html)->find('.kenoTable');
+
+        $rows = $table->find('tr:gt(0)')->map(function ($row) {
             return $row->find('td')->texts()->all();
         });
 
         $items = array_reverse($rows->all());
-
         return $items;
     }
 }
