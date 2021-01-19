@@ -1,6 +1,7 @@
 <?php
 namespace App\Models\LottoModule\Models;
 
+use QL\QueryList;
 use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\Models\OpenControl;
@@ -48,44 +49,54 @@ class LottoBit28 extends BasicModel
 
     public function lottoCollectData()
     {
-        $backup = function () {
-            $client   = new \GuzzleHttp\Client(['timeout' => 10]);
-            $proxy_ip = getProxyIP('bit');
-            $uri      = 'https://etherscan.io/txsPending';
-            $option   = ['proxy' => ['http' => $proxy_ip]];
-            $response = $client->get($uri, $option);
-            $body     = $response->getBody();
+        // $backup = function () {
+        //     $client   = new \GuzzleHttp\Client(['timeout' => 10]);
+        //     $proxy_ip = getProxyIP('bit');
+        //     $uri      = 'https://etherscan.io/txsPending';
+        //     $option   = ['proxy' => ['http' => $proxy_ip]];
+        //     $response = $client->get($uri, $option);
+        //     $body     = $response->getBody();
 
-            $temp = [];
-            preg_match_all('/[a-z\d+]{64}/', $body, $temp);
-            $data = array_unique($temp[0]);
+        //     $temp = [];
+        //     preg_match_all('/[a-z\d+]{64}/', $body, $temp);
+        //     $data = array_unique($temp[0]);
 
-            $result = ['body' => $body, 'uri' => $uri, 'data' => $data];
-            return $result;
-        };
+        //     $result = ['body' => $body, 'uri' => $uri, 'data' => $data];
+        //     return $result;
+        // };
 
         $main = function () {
-            $client   = new \GuzzleHttp\Client(['timeout' => 5]);
-            $uri      = 'https://www.blockchain.com/btc/unconfirmed-transactions';
-            $response = $client->get($uri);
-            $body     = $response->getBody();
+            $uri = 'https://www.blockchain.com/btc/unconfirmed-transactions';
 
-            $temp = [];
-            preg_match_all('/[a-z\d+]{64}/', $body, $temp);
-            $data = array_unique($temp[0]);
+            // $proxy_ip = getProxyIP('bit');
+            // $opts     = ['proxy' => $proxy_ip];
+            $table = QueryList::get($uri, [], [])->find('.beTSoK');
 
-            $result = ['body' => $body, 'uri' => $uri, 'data' => $data];
+            $list = $table->find('.hXyplo')->map(function ($row) {
+                return $row->find('a')->texts()->all();
+            });
+
+            $data = [];
+            foreach ($list->toArray() as $key => $value) {
+                if (!preg_match('/[a-z\d+]{64}/', $value[0])) {
+                    continue;
+                }
+
+                $data[] = $value[0];
+            }
+
+            $result = ['uri' => $uri, 'data' => $data];
             return $result;
         };
 
+        $cache_name = 'bitCollectData';
         try {
             $collect = $main();
+            if (count($collect['data']) > 0) {
+                cache()->put($cache_name, $collect, 6000);
+            }
         } catch (\Throwable $th) {
-            $collect = $backup();
-        }
-
-        if (count($collect['data']) == 0) {
-            $collect = $backup();
+            $collect->cache()->get($cache_name);
         }
 
         $uri  = $collect['uri'];

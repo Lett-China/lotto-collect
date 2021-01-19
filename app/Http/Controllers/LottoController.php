@@ -14,7 +14,7 @@ class LottoController extends Controller
     {
         $cache_name = 'bitcoinCollectCache';
 
-        $result = cache()->remember($cache_name, 10, function () {
+        $result = cache()->remember($cache_name, 5, function () {
             $data   = new LottoBit28();
             $result = $data->lottoCollectData();
             return $result;
