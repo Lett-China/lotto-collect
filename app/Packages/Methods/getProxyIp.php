@@ -2,6 +2,12 @@
 
 function getProxyIP($country = 'ca')
 {
+    $cache_name = 'getProxyIP' . $country;
+
+    if (cache()->has($cache_name) === true) {
+        return cache()->get($cache_name);
+    }
+
     start:
     $client = new \GuzzleHttp\Client(['timeout' => 60]);
     $uris   = [
@@ -34,5 +40,6 @@ function getProxyIP($country = 'ca')
         $proxy_ip = $proxy_data['data'][0]['ip'] . ':' . $proxy_data['data'][0]['port'];
     }
 
+    cache()->put($cache_name, $proxy_ip, 60);
     return $proxy_ip;
 }

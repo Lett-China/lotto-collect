@@ -173,6 +173,11 @@ class LottoKenoCa extends BasicModel
 
         $proxy_ip = getProxyIP('ca');
 
+        if (!$proxy_ip) {
+            dump('代理IP没拿到');
+            return false ;
+        }
+
         try {
             $options  = ['proxy' => ['https' => $proxy_ip]];
             $response = $client->get($uri, $options);

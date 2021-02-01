@@ -18,15 +18,26 @@ class CollectKenoCaCommand extends Command
 
     public function handle()
     {
-        $this->info('collect keno_ca start');
-        $model = new LottoKenoCa();
-        $model->officialCheck();
+        $this->info('collect keno_ca start===');
+
+        $date  = date('Y-m-d H:i', strtotime('+30 seconds'));
+        $count = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->count();
+        $this->comment('keno_ca has ' . $count);
+        if ($count !== 0) {
+            $model = new LottoKenoCa();
+            $model->officialCheck();
+        }
 
         try {
+            $cache_name = 'collectKenoCaHasNoOpen';
+            if (cache()->has($cache_name) === true) {
+                goto end;
+            }
             //卡奖处理
             $date = date('Y-m-d H:i', strtotime('-1 minute'));
             $lose = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->first(['id', 'lotto_at']);
             if ($lose === null) {
+                cache()->put($cache_name, true, 60);
                 goto end;
             }
 
