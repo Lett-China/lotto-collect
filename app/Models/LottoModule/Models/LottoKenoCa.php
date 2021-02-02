@@ -163,20 +163,22 @@ class LottoKenoCa extends BasicModel
 
     public function officialCheck($id = null)
     {
-        $client = new \GuzzleHttp\Client(['timeout' => 60]);
+        $client = new \GuzzleHttp\Client(['timeout' => 10]);
         // $uri = 'https://www.playnow.com/services2/keno/draw/2020-06-02/21/0';
         $uri        = 'https://www.playnow.com/services2/keno/draw/2576727/21';
-        $uri        = 'https://www.playnow.com/services2/keno/draw/latest/10/0?time=' . time();
+        $uri        = 'https://www.playnow.com/services2/keno/draw/latest/10/0';
         $id && $uri = 'https://www.playnow.com/services2/keno/draw/' . $id . '/10';
 
         date_default_timezone_set('America/Vancouver');
 
-        $proxy_ip = getProxyIP('ca');
+        $proxy_ip = getProxyIP('tw');
 
         if (!$proxy_ip) {
             dump('代理IP没拿到');
-            return false ;
+            return false;
         }
+
+        dump($proxy_ip);
 
         try {
             $options  = ['proxy' => ['https' => $proxy_ip]];
