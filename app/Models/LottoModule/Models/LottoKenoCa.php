@@ -163,15 +163,14 @@ class LottoKenoCa extends BasicModel
 
     public function officialCheck($id = null)
     {
-        $client = new \GuzzleHttp\Client(['timeout' => 10]);
+        $client = new \GuzzleHttp\Client(['timeout' => 5]);
         // $uri = 'https://www.playnow.com/services2/keno/draw/2020-06-02/21/0';
-        $uri        = 'https://www.playnow.com/services2/keno/draw/2576727/21';
         $uri        = 'https://www.playnow.com/services2/keno/draw/latest/10/0';
         $id && $uri = 'https://www.playnow.com/services2/keno/draw/' . $id . '/10';
 
         date_default_timezone_set('America/Vancouver');
 
-        $proxy_ip = getProxyIP('tw');
+        $proxy_ip = getProxyIP('ca');
 
         if (!$proxy_ip) {
             dump('代理IP没拿到');
@@ -181,11 +180,31 @@ class LottoKenoCa extends BasicModel
         dump($proxy_ip);
 
         try {
-            $options  = ['proxy' => ['https' => $proxy_ip]];
+            // $urlParams = [];
+            // $opts      = ['proxy' => $proxy_ip];
+            // $data      = \QL\QueryList::get($uri, $urlParams, $opts);
+
+            // dd($data);
+
+            $options = [
+                'proxy'   => ['https' => $proxy_ip],
+                'headers' => [
+                    'Accept'                    => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Encoding'           => 'gzip, deflate, br',
+                    'Accept-Language'           => 'en-US,en;q=0.5',
+                    'Cache-Control'             => 'max-age=0',
+                    'Connection'                => 'keep-alive',
+                    'Host'                      => 'www.playnow.com',
+                    'Upgrade-Insecure-Requests' => '1',
+                    'User-Agent'                => 'Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0',
+                ],
+
+            ];
             $response = $client->get($uri, $options);
             $data     = json_decode($response->getBody(), true);
             dump($uri);
         } catch (\Throwable $th) {
+            dd($data);
             dump('加拿大Keno官方采集失败', $uri);
             return false;
         }
@@ -258,6 +277,30 @@ class LottoKenoCa extends BasicModel
                 dump($current->id . ':' . $current->open_code . ' fix open_code from official');
             }
         }
+        return true;
+    }
+
+    public function tempCollect()
+    {
+        $uri      = 'http://518cp.xyz/api?p=json&t=jndbskl8&token=B5F0877278AE9F48&limit=5';
+        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
+        $response = $client->get($uri);
+        $data     = json_decode($response->getBody(), true);
+
+        try {
+            foreach ($data['data'] as $key => $value) {
+                $item = [
+                    'id'        => $value['expect'],
+                    'open_code' => $value['opencode'],
+                    'opened_at' => $value['opentime'],
+                ];
+
+                $this->lottoOpen($item);
+            }
+        } catch (\Throwable $th) {
+            dump($data);
+        }
+
         return true;
     }
 }

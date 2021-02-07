@@ -25,7 +25,8 @@ class CollectKenoCaCommand extends Command
         $this->comment('keno_ca has ' . $count);
         if ($count !== 0) {
             $model = new LottoKenoCa();
-            $model->officialCheck();
+            $model->tempCollect();
+            // $model->officialCheck();
         }
 
         try {
