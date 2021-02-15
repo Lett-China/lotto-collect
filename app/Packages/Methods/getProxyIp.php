@@ -4,9 +4,10 @@ function getProxyIP($country = 'ca')
 {
     $cache_name = 'getProxyIP' . $country;
 
-    // if (cache()->has($cache_name) === true) {
-    //     return cache()->get($cache_name);
-    // }
+    if (cache()->has($cache_name) === true) {
+        dump('proxy ip from cache');
+        return cache()->get($cache_name);
+    }
 
     start:
     $client = new \GuzzleHttp\Client(['timeout' => 3]);
@@ -32,7 +33,7 @@ function getProxyIP($country = 'ca')
     if ($proxy_data['code'] !== 0) {
         dump($proxy_data['msg'] . ' ====');
 
-        // return cache()->get($cache_name);
+        return cache()->get($cache_name);
         return false;
     }
 

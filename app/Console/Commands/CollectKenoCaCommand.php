@@ -25,7 +25,7 @@ class CollectKenoCaCommand extends Command
         $this->comment('keno_ca has ' . $count);
         if ($count !== 0) {
             $model = new LottoKenoCa();
-            $model->tempCollect();
+            $model->thirdCollect();
             // $model->officialCheck();
         }
 
@@ -35,10 +35,10 @@ class CollectKenoCaCommand extends Command
                 goto end;
             }
             //卡奖处理
-            $date = date('Y-m-d H:i', strtotime('-1 minute'));
+            $date = date('Y-m-d H:i', strtotime('+30 seconds'));
             $lose = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->first(['id', 'lotto_at']);
             if ($lose === null) {
-                cache()->put($cache_name, true, 60);
+                cache()->put($cache_name, true, 30);
                 goto end;
             }
 

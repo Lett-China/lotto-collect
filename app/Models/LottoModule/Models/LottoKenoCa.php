@@ -204,7 +204,6 @@ class LottoKenoCa extends BasicModel
             $data     = json_decode($response->getBody(), true);
             dump($uri);
         } catch (\Throwable $th) {
-            dd($data);
             dump('加拿大Keno官方采集失败', $uri);
             return false;
         }
@@ -280,7 +279,7 @@ class LottoKenoCa extends BasicModel
         return true;
     }
 
-    public function tempCollect()
+    public function thirdCollect()
     {
         $uri      = 'http://518cp.xyz/api?p=json&t=jndbskl8&token=B5F0877278AE9F48&limit=5';
         $client   = new \GuzzleHttp\Client(['timeout' => 3]);
