@@ -37,54 +37,124 @@ class LottoWinPlace
 
     public static function lotto28($open_code, $lotto_name)
     {
+        //和组合开奖
+        $he_ass_fun = function ($he) {
+            $result = [];
+            //和值组合开奖
+            $he % 2 == 0 && $result[]              = 'dob';
+            $he % 2 == 1 && $result[]              = 'sig';
+            $he >= 14 && $result[]                 = 'big';
+            $he <= 13 && $result[]                 = 'sml';
+            $he < 5 && $result[]                   = 'xsm';
+            $he > 22 && $result[]                  = 'xbg';
+            $he % 2 == 0 && $he >= 14 && $result[] = 'bdo';
+            $he % 2 == 1 && $he >= 14 && $result[] = 'bsg';
+            $he % 2 == 0 && $he <= 13 && $result[] = 'sdo';
+            $he % 2 == 1 && $he <= 13 && $result[] = 'ssg';
+
+            return $result;
+        };
+
+        //特殊玩法开奖
+        $spe_fun = function ($code) {
+            asort($code);
+            $code   = array_values($code);
+            $str    = implode('', $code);
+            $unique = array_unique($code);
+            $result = 'oth'; //36玩法开奖 默认为杂
+
+            ($code[0] + 1 == $code[1] || $code[1] + 1 == $code[2] || ($code[0] == 0 && $code[2] == 9)) && $result = 'juh'; //半顺
+            count($unique) === 2 && $result                                                                       = 'pai'; //对
+            count($unique) === 1 && $result                                                                       = 'leo'; //豹子
+            implode('', $code) === '019' && $result                                                               = 'jun'; //019为顺
+            implode('', $code) === '089' && $result                                                               = 'jun'; //890为顺
+            ($code[0] + 1 == $code[1] && $code[1] + 1 == $code[2]) && $result                                     = 'jun'; //顺
+            return $result;
+        };
+
+        //外围群玩法
+        $qq_win_place = function () use ($open_code, $lotto_name, $he_ass_fun, $spe_fun) {
+            $formula = LottoFormula::basicQq($open_code, $lotto_name);
+            $result  = [];
+
+            $he   = $formula['code_he'];
+            $code = $formula['code_arr'];
+
+            $result[] = 'qua_' . sprintf('%02d', $he);
+            $result[] = 'qub_' . sprintf('%02d', $he);
+
+            $he_ass = $he_ass_fun($he);
+            foreach ($he_ass as $value) {
+                $result[] = 'qua_' . $value;
+                $result[] = 'qub_' . $value;
+            }
+
+            //特殊玩法
+            $spe = $spe_fun($code);
+            if (in_array($spe, ['pai', 'leo', 'jun'])) {
+                $result[] = 'qua_' . $spe;
+                $result[] = 'qub_' . $spe;
+            }
+
+            //定位胆开奖
+            $dwd = [];
+            foreach ($code as $index => $value) {
+                $prefix                   = 'q' . ($index + 1) . '_';
+                $dwd[]                    = $prefix . sprintf('%02d', $value);
+                $value % 2 == 0 && $dwd[] = $prefix . 'dob';
+                $value % 2 == 1 && $dwd[] = $prefix . 'sig';
+                $value >= 5 && $dwd[]     = $prefix . 'big';
+                $value <= 4 && $dwd[]     = $prefix . 'sml';
+            }
+
+            $code[0] > $code[2] && $dwd[]  = 'qq_drg';
+            $code[0] < $code[2] && $dwd[]  = 'qq_tig';
+            $code[0] == $code[2] && $dwd[] = 'qq_pea';
+
+            //色波开奖
+            in_array($he, ['01', '02', '07', '08', '12', '13', '18', '19', '23', '24']) && $dwd[] = 'red';
+            in_array($he, ['03', '04', '09', '10', '14', '15', '20', '25', '26']) && $dwd[]       = 'blue';
+            in_array($he, ['00', '05', '06', '11', '16', '17', '21', '22', '27']) && $dwd[]       = 'green';
+
+            foreach (['qua', 'qub'] as $room) {
+                foreach ($dwd as $place) {
+                    $result[] = $room . '_' . $place;
+                }
+            }
+
+            return $result;
+        };
+
         $formula = LottoFormula::$lotto_name($open_code);
+        $result  = [];
 
-        $he  = $formula['code_he'];
-        $win = [];
-
-        $he % 2 == 0 && $win[]              = 'dob';
-        $he % 2 == 1 && $win[]              = 'sig';
-        $he >= 14 && $win[]                 = 'big';
-        $he <= 13 && $win[]                 = 'sml';
-        $he < 5 && $win[]                   = 'xsm';
-        $he > 22 && $win[]                  = 'xbg';
-        $he % 2 == 0 && $he >= 14 && $win[] = 'bdo';
-        $he % 2 == 1 && $he >= 14 && $win[] = 'bsg';
-        $he % 2 == 0 && $he <= 13 && $win[] = 'sdo';
-        $he % 2 == 1 && $he <= 13 && $win[] = 'ssg';
-
-        //36部分开奖
+        $he   = $formula['code_he'];
         $code = $formula['code_arr'];
-        asort($code);
-        $code   = array_values($code);
-        $str    = implode('', $code);
-        $unique = array_unique($code);
-        $win_ts = 'oth'; //36玩法开奖 默认为杂
 
-        ($code[0] + 1 == $code[1] || $code[1] + 1 == $code[2] || ($code[0] == 0 && $code[2] == 9)) && $win_ts = 'juh'; //半顺
-        count($unique) === 2 && $win_ts                                                                       = 'pai'; //对
-        count($unique) === 1 && $win_ts                                                                       = 'leo'; //豹子
-        implode('', $code) === '019' && $win_ts                                                               = 'jun'; //019为顺
-        implode('', $code) === '089' && $win_ts                                                               = 'jun'; //019为顺
-        ($code[0] + 1 == $code[1] && $code[1] + 1 == $code[2]) && $win_ts                                     = 'jun'; //顺
-
-        $result   = [];
-        $result[] = 'ts_' . $win_ts;
-
-        foreach ($win as $value) {
-            $result[] = 'ww_' . $value;
-        }
-
+        //和值开奖
         $result[] = 'he_' . sprintf('%02d', $he);
         $result[] = 'fd_' . sprintf('%02d', $he);
 
-        //16玩法
+        //外围开奖
+        foreach ($he_ass_fun($he) as $value) {
+            $result[] = 'ww_' . $value;
+        }
+
+        //36开奖
+        $ts_win   = $spe_fun($code);
+        $result[] = 'ts_' . $ts_win;
+
+        //16/11玩法
         if ($lotto_name !== 'bit28') {
             $formula  = LottoFormula::basic16($open_code);
             $result[] = 'st_' . sprintf('%02d', $formula['code_he']);
             $formula  = LottoFormula::basic11($open_code);
             $result[] = 'el_' . sprintf('%02d', $formula['code_he']);
         }
+
+        //组合群玩法开奖
+        $qq_win = $qq_win_place();
+        $result = array_merge($result, $qq_win);
 
         return $result;
     }

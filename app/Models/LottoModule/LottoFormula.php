@@ -81,6 +81,32 @@ class LottoFormula
         return $result;
     }
 
+    public static function basicQq($open_code, $lotto_name = null)
+    {
+        if (in_array($lotto_name, ['ca28', 'bit28', 'de28'])) {
+            return self::$lotto_name($open_code);
+        }
+
+        $source  = explode(',', $open_code);
+        $label   = [1, 2, 3, 4, 5, 6];
+        $sec_1   = self::getCodeArea28($label, $source);
+        $label   = [7, 8, 9, 10, 11, 12];
+        $sec_2   = self::getCodeArea28($label, $source);
+        $label   = [13, 14, 15, 16, 17, 18];
+        $sec_3   = self::getCodeArea28($label, $source);
+        $arrange = [$sec_1['mod'], $sec_2['mod'], $sec_3['mod']];
+        $code_he = array_sum($arrange);
+        $result  = [
+            'code_he'  => $code_he,
+            'code_arr' => $arrange,
+            'code_str' => implode(',', $arrange),
+            'source'   => $source,
+            'extend'   => ['sec_1' => $sec_1, 'sec_2' => $sec_2, 'sec_3' => $sec_3],
+        ];
+
+        return $result;
+    }
+
     public static function bit28($source)
     {
         $hash     = hash('sha256', $source);
