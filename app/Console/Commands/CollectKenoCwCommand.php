@@ -26,7 +26,7 @@ class CollectKenoCwCommand extends Command
 
         //加拿大西部28开奖
         $cw28    = app('App\Models\LottoModule\Models\LottoKenoCw');
-        $is_null = $cw28->where('status', 1)->where('lotto_at', '<', date('Y-m-d H:i:s'))->count();
+        $is_null = $cw28->where('status', 1)->where('lotto_at', '<', date('Y-m-d H:i:s', strtotime('+30 seconds')))->count();
         if ($is_null > 0) {
             $cw28->lottoOpenOfficial();
             $this->comment('keno-cw open null items:' . $is_null);

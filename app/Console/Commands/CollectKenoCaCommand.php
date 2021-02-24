@@ -20,13 +20,13 @@ class CollectKenoCaCommand extends Command
     {
         $this->info('collect keno_ca start===');
 
-        $date  = date('Y-m-d H:i', strtotime('+30 seconds'));
+        $date  = date('Y-m-d H:i:s', strtotime('+30 seconds'));
         $count = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->count();
         $this->comment('keno_ca has ' . $count);
         if ($count !== 0) {
             $model = new LottoKenoCa();
+            $model->officialCheck();
             $model->thirdCollect();
-            // $model->officialCheck();
         }
 
         try {
@@ -35,7 +35,7 @@ class CollectKenoCaCommand extends Command
                 goto end;
             }
             //卡奖处理
-            $date = date('Y-m-d H:i', strtotime('+30 seconds'));
+            $date = date('Y-m-d H:i');
             $lose = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->first(['id', 'lotto_at']);
             if ($lose === null) {
                 cache()->put($cache_name, true, 30);
@@ -53,6 +53,7 @@ class CollectKenoCaCommand extends Command
         }
 
         end:
+
         return $this->info('collect keno_ca success');
     }
 }
