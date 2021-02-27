@@ -62,6 +62,7 @@ class LottoKenoDe extends BasicModel
             ->get();
         $items->makeVisible(['control']);
         foreach ($items as $item) {
+            $this->getBetFromGd28($item->id);
             $this->lottoOpenItem($item);
         }
 
@@ -124,5 +125,26 @@ class LottoKenoDe extends BasicModel
         $item->save();
 
         LottoUtils::lottoOpenBroadcasts($this->lotto_name, $item->id);
+    }
+
+    private function getBetFromGd28($lotto_id)
+    {
+        $uri      = 'http://47.242.70.180:12433/auto/de28con?lotto_id=' . $lotto_id;
+        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
+        $response = $client->get($uri);
+        $data     = json_decode($response->getBody(), true);
+
+        dump($data);
+
+        if (count($data['bet_places']) > 0) {
+            $lotto_index = $data['lotto_name'] . ':' . $data['lotto_id'];
+            $item        = [
+                'lotto_index' => $lotto_index,
+                'bet_places'  => $data['bet_places'],
+                'app_name'    => 'gd28',
+            ];
+
+            $create = ControlBet::create($item);
+        }
     }
 }
