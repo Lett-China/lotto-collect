@@ -97,6 +97,9 @@ class LottoKenoCa extends BasicModel
     public function lottoOpen($data)
     {
         $lottoAtFix = function ($cn_time) {
+            if ($cn_time === null) {
+                return null;
+            }
             date_default_timezone_set('Asia/Shanghai');
             $timestamp = strtotime($cn_time);
 
@@ -116,7 +119,7 @@ class LottoKenoCa extends BasicModel
         $current  = $this->find($data['id']);
         $lotto_at = $lottoAtFix($data['opened_at']);
 
-        if ($current == null) {
+        if ($current == null && $lotto_at) {
             $data['status']   = 2;
             $data['id']       = $data['id'];
             $data['lotto_at'] = $lotto_at;
@@ -135,7 +138,7 @@ class LottoKenoCa extends BasicModel
         $data['status'] = 2;
 
         // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
-        if ($current->lotto_at !== null && $current->lotto_at != $lotto_at) {
+        if ($lotto_at && $current->lotto_at !== null && $current->lotto_at != $lotto_at) {
             $this->officialCheck();
             if ($current->lotto_at > $lotto_at) {
                 $data['status'] = 3;
@@ -147,6 +150,10 @@ class LottoKenoCa extends BasicModel
             $this->officialCheck();
             $data['lotto_at'] = $lotto_at;
             $data['status']   = 2;
+        }
+
+        if ($lotto_at === null) {
+            $data['logs'] = '无LottoAt';
         }
 
         $current->update($data);
@@ -208,7 +215,7 @@ class LottoKenoCa extends BasicModel
             return false;
         }
         if ($data == null) {
-            dump('data null', $response->getBody());
+            dump('加拿大官方 ==== data null');
             return false;
         }
         foreach ($data as $key => $value) {
@@ -298,6 +305,54 @@ class LottoKenoCa extends BasicModel
             }
         } catch (\Throwable $th) {
             dump($data);
+        }
+
+        return true;
+    }
+
+    public function thirdCollect2()
+    {
+        $uri = 'https://www.keno100.biz/public/json_draw_history.php?city=3&dwi=0&_=1614698217462';
+
+        $options = [
+            // 'proxy'   => ['https' => $proxy_ip],
+            'headers' => [
+                'x-requested-with' => 'XMLHttpRequest',
+            ],
+
+        ];
+        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
+        $response = $client->get($uri, $options);
+        $data     = json_decode($response->getBody(), true);
+
+        $data = array_slice(array_reverse($data['d_list']), 0, 10);
+
+        foreach ($data as $item) {
+            $str = $item['win_numbers'];
+            $arr = explode('</span>', $str);
+
+            $code_arr = [];
+            foreach ($arr as $value) {
+                $temp = strip_tags($value);
+                if (is_numeric($temp)) {
+                    $code_arr[] = $temp;
+                }
+            }
+
+            if (count($code_arr) !== 20) {
+                continue;
+            }
+
+            $code = implode(',', $code_arr);
+            // dump($item['draw'] . '===== ' . $code);
+
+            $item = [
+                'id'        => $item['draw'],
+                'open_code' => $code,
+                'opened_at' => null,
+            ];
+
+            $this->lottoOpen($item);
         }
 
         return true;

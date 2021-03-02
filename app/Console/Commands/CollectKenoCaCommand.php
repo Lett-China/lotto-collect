@@ -23,10 +23,12 @@ class CollectKenoCaCommand extends Command
         $date  = date('Y-m-d H:i:s', strtotime('+30 seconds'));
         $count = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->count();
         $this->comment('keno_ca has ' . $count);
+
         if ($count !== 0) {
             $model = new LottoKenoCa();
             $model->officialCheck();
             $model->thirdCollect();
+            $model->thirdCollect2();
         }
 
         try {
