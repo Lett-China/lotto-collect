@@ -64,20 +64,24 @@ class LottoUtils
 
     public static function lottoOpenBroadcasts($name, $id)
     {
+        dump('开奖推送通知开始' . $name . '====' . $id);
         $params = [
             'name' => $name,
             'id'   => $id,
         ];
 
-        dump($params);
-        $uri      = DB::table('open_broadcasts')->get();
-        $client   = new \GuzzleHttp\Client(['timeout' => 10]);
-        $promises = [];
-        foreach ($uri as $value) {
-            dump($value->uri);
-            $promises[] = $client->getAsync($value->uri, ['query' => $params]);
+        try {
+            $uri      = DB::table('open_broadcasts')->get();
+            $client   = new \GuzzleHttp\Client(['timeout' => 10]);
+            $promises = [];
+            foreach ($uri as $value) {
+                $promises[] = $client->getAsync($value->uri, ['query' => $params]);
+            }
+            $results = \GuzzleHttp\Promise\unwrap($promises);
+        } catch (\Throwable $th) {
+            return dump('开奖推送通知失败');
         }
 
-        $results = \GuzzleHttp\Promise\unwrap($promises);
+        dump('开奖推送通知完成');
     }
 }
