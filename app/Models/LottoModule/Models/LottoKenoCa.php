@@ -222,6 +222,12 @@ class LottoKenoCa extends BasicModel
             date_default_timezone_set('America/Vancouver');
             $datetime = $value['drawDate'] . ' ' . $value['drawTime'];
             $time     = strtotime($datetime);
+
+            //每年3月的第二个星期天，加拿大时间在3点 ，时间偏移1小时
+            if (date('m', $time) === '03' && ceil(date('j', $time) / 7) == 2 && date('w', $time) === '0' && in_array(substr($value['drawTime'], 0, 2), ['03', '04'])) {
+                $time += 3600;
+            }
+
             date_default_timezone_set('Asia/Shanghai');
             $official_at = date('Y-m-d H:i:s', $time);
             $current     = $this->find($value['drawNbr']);
