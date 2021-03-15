@@ -271,6 +271,10 @@ class LottoKenoCa extends BasicModel
                 $current->save();
                 $this->where('status', '1')->where('id', '>', $current->id)->delete();
                 $this->lottoCreate();
+                if ($current->mark !== '1') {
+                    $content = '【Admin】CA促发修改时间，请及时核对';
+                    toAdmin($content);
+                }
                 dump($current->id . ':' . $current->lotto_at . ' fix lotto_at');
             } else {
                 dump($current->id . ':' . $current->lotto_at . ' success');
