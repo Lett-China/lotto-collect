@@ -60,19 +60,20 @@ class LottoKenoCa extends BasicModel
 
         if ($last_lotto->lotto_at) {
             date_default_timezone_set('America/Vancouver');
+            $last_normal = date('I') == '1' ? '19:00:00' : '20:00:00';
 
-            // dd(date('Y-m-d H:i:s w', time() + 86400));
+            date_default_timezone_set('Asia/Shanghai');
+
             // 判断上一期是否为最后一期
-            if (date('H:i:s', $last_time - 86400) == '04:00:00' || $last_lotto->mark == 2) {
+            if (date('H:i:s', $last_time) == $last_normal || $last_lotto->mark == 2) {
                 $next_second = 2100;
                 $next_mark   = 1;
             }
 
             $next_time = $last_time + $next_second;
             // 如果下一次为最后一期 标识
-            date('H:i:s', $next_time - 86400) == '04:00:00' && $next_mark = 2;
+            date('H:i:s', $next_time) == $last_normal && $next_mark = 2;
 
-            date_default_timezone_set('Asia/Shanghai');
             $next_at = date('Y-m-d H:i:s', $next_time);
             // 如果上一期为第一期 且未开奖  设置开奖时间为NULL
             if ($last_lotto->status == 1 && $last_lotto->mark == 1) {
@@ -223,10 +224,15 @@ class LottoKenoCa extends BasicModel
             $datetime = $value['drawDate'] . ' ' . $value['drawTime'];
             $time     = strtotime($datetime);
 
-            //每年3月的第二个星期天，加拿大时间在3点 ，时间偏移1小时
-            if (date('m', $time) === '03' && ceil(date('j', $time) / 7) == 2 && date('w', $time) === '0' && in_array(substr($value['drawTime'], 0, 2), ['03', '04'])) {
-                $time += 3600;
-            }
+            //每年3月的第二个星期天，加拿大时间灵成在3/4点，时间偏移1小时
+            // if (date('m', $time) === '03'
+            //     && ceil(date('j', $time) / 7) == 2
+            //     && date('w', $time) === '0'
+            //     && in_array(substr($value['drawTime'], 0, 2), ['03', '04'])
+            //     && substr($value['drawTime'], -2, 2) === 'AM'
+            // ) {
+            //     $time += 3600;
+            // }
 
             date_default_timezone_set('Asia/Shanghai');
             $official_at = date('Y-m-d H:i:s', $time);
@@ -253,7 +259,7 @@ class LottoKenoCa extends BasicModel
             }
 
             $has_error = false;
-            if ($current->lotto_at !== $official_at) {
+            if (($current->lotto_at !== $official_at && $current->mark === '1') || substr($current->lotto_at, -5, 5) !== substr($official_at, -5, 5)) {
                 $warning_type = 'system';
                 if ($current->lotto_at > $official_at) {
                     $has_error    = true;

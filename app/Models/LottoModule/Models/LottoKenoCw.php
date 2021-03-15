@@ -67,18 +67,19 @@ class LottoKenoCw extends BasicModel
 
         if ($last_lotto->lotto_at) {
             date_default_timezone_set('America/Vancouver');
+            $last_normal = date('I') == '1' ? '16:30:00' : '17:30:00';
 
+            date_default_timezone_set('Asia/Shanghai');
             // 判断上一期是否为最后一期
-            if (date('H:i:s', $last_time - 86400) == '01:30:00' || $last_lotto->mark == 2) {
+            if (date('H:i:s', $last_time) == $last_normal || $last_lotto->mark == 2) {
                 $next_second = 7200;
                 $next_mark   = 1;
             }
 
             $next_time = $last_time + $next_second;
             // 如果下一次为最后一期 标识
-            date('H:i:s', $next_time - 86400) == '01:30:00' && $next_mark = 2;
+            date('H:i:s', $next_time) == $last_normal && $next_mark = 2;
 
-            date_default_timezone_set('Asia/Shanghai');
             $next_at = date('Y-m-d H:i:s', $next_time);
         }
 
