@@ -81,8 +81,15 @@ class LottoKenoCa extends BasicModel
             };
         }
 
-        if ($next_at !== null & $next_at < date('Y-m-d H:i:s')) {
+        if ($next_at !== null && $next_at < date('Y-m-d H:i:s')) {
             return 'lotto_at error : ' . $next_at;
+        }
+        if ($next_at !== null && strtotime($next_at) - time() > 1200 && $next_mark != 1) {
+            return cache()->remember('CACreateLottoAtSafe', 60, function () use ($next_at, $last_lotto) {
+                $content = '【Admin】CA创建新一期 促发安全机制。ID:' . ($last_lotto->id + 1) . ' / ' . $next_at . '。 发送时间：' . date('m-d H:i:s');
+                toAdmin($content);
+                return $content;
+            });
         }
 
         $data = [
@@ -259,7 +266,9 @@ class LottoKenoCa extends BasicModel
             }
 
             $has_error = false;
-            if (($current->lotto_at !== $official_at && $current->mark === '1') || substr($current->lotto_at, -5, 5) !== substr($official_at, -5, 5)) {
+
+            //substr($current->lotto_at, -5, 5) !== substr($official_at, -5, 5)
+            if ($current->lotto_at !== $official_at && $official_at <= date('Y-m-d H:i:s')) {
                 $warning_type = 'system';
                 if ($current->lotto_at > $official_at) {
                     $has_error    = true;
@@ -271,10 +280,10 @@ class LottoKenoCa extends BasicModel
                 $current->save();
                 $this->where('status', '1')->where('id', '>', $current->id)->delete();
                 $this->lottoCreate();
-                if ($current->mark !== '1') {
-                    $content = '【Admin】CA促发修改时间，请及时核对';
-                    toAdmin($content);
-                }
+
+                $content = '【Admin】CA促发修改时间，请及时核对' . date('m-d H:i:s');
+                toAdmin($content);
+
                 dump($current->id . ':' . $current->lotto_at . ' fix lotto_at');
             } else {
                 dump($current->id . ':' . $current->lotto_at . ' success');

@@ -97,6 +97,8 @@ class LottoBingoTw extends BasicModel
     {
         $client = new \GuzzleHttp\Client(['timeout' => 60]);
         $url    = 'https://www.taiwanlottery.com.tw/lotto/BingoBingo/drawing.aspx';
+
+        dump($url);
         // $proxy_ip  = getProxyIP('tw');
         $urlParams = [];
         // $opts      = ['proxy' => $proxy_ip];
@@ -107,7 +109,7 @@ class LottoBingoTw extends BasicModel
         });
 
         $items = $rows->all();
-
+        // dump($table);
         $result = [];
 
         foreach ($items as $value) {
@@ -121,7 +123,35 @@ class LottoBingoTw extends BasicModel
 
             $data = ['id' => $value[0], 'open_code' => $code];
 
+            dump($data);
+
             $this->lottoOpenItem($data);
+        }
+
+        return true;
+    }
+
+    public function thirdCollect()
+    {
+        $uri      = 'http://518cp.xyz/api?p=json&t=twbg&token=B5F0877278AE9F48&limit=5';
+        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
+        $response = $client->get($uri);
+        $data     = json_decode($response->getBody(), true);
+
+        dump($data);
+
+        try {
+            foreach ($data['data'] as $key => $value) {
+                $item = [
+                    'id'        => $value['expect'],
+                    'open_code' => $value['opencode'],
+                    'opened_at' => $value['opentime'],
+                ];
+
+                $this->lottoOpen($item);
+            }
+        } catch (\Throwable $th) {
+            dump($data);
         }
 
         return true;

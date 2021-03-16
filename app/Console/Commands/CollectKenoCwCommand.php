@@ -29,6 +29,7 @@ class CollectKenoCwCommand extends Command
         $is_null = $cw28->where('status', 1)->where('lotto_at', '<', date('Y-m-d H:i:s', strtotime('+90 seconds')))->count();
         if ($is_null > 0) {
             $cw28->lottoOpenOfficial();
+            $cw28->thirdCollect();
             $this->comment('keno-cw open null items:' . $is_null);
         }
 

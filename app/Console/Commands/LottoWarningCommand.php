@@ -28,15 +28,24 @@ class LottoWarningCommand extends Command
             $date = date('Y-m-d H:i', strtotime('-2 minute'));
             foreach ($lotto as $name) {
                 $model = $mapping[$name];
-                $data  = app($model)->where('lotto_at', '<=', $date)->where('status', 1)->exists();
+                $data  = app($model)->where('lotto_at', '<=', $date)->where('status', 1);
 
-                if ($data === true) {
+                //跳过ca28 第一期
+                if ($name === 'ca28') {
+                    $item = $data->first();
+                    if ($item !== null && $item->mark == 1) {
+                        continue;
+                    }
+                }
+
+                if ($data->exists() === true) {
                     array_push($items, $name);
                 }
             }
 
             if (count($items) > 0) {
-                $content = '【Admin】' . implode('、', $items) . '触发BUG，请及时处理';
+                $content = '【Admin】' . implode('、', $items) . '触发BUG，请及时处理' . date('m-d H:i:s');
+                dump($content);
                 toAdmin($content);
             }
         });

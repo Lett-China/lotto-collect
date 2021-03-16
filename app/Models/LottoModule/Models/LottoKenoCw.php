@@ -231,6 +231,30 @@ class LottoKenoCw extends BasicModel
         return 'update';
     }
 
+    public function thirdCollect()
+    {
+        $uri      = 'http://518cp.xyz/api?p=json&t=jndxbkl8&token=B5F0877278AE9F48&limit=5';
+        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
+        $response = $client->get($uri);
+        $data     = json_decode($response->getBody(), true);
+
+        try {
+            foreach ($data['data'] as $key => $value) {
+                $item = [
+                    'id'        => $value['expect'],
+                    'open_code' => $value['opencode'],
+                    'opened_at' => $value['opentime'],
+                ];
+
+                $this->lottoOpen($item);
+            }
+        } catch (\Throwable $th) {
+            dump($data);
+        }
+
+        return true;
+    }
+
     private function collectData($date)
     {
         $url = 'https://www.wclc.com/winning-numbers/keno.htm?channel=print&selDate=' . $date;

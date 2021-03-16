@@ -23,6 +23,7 @@ class CollectBingoTwCommand extends Command
         $is_null = $tw28->where('status', 1)->where('lotto_at', '<', date('Y-m-d H:i:s', strtotime('+90 seconds')))->count();
         if ($is_null > 0) {
             $tw28->lottoOpenOfficial();
+            $tw28->thirdCollect();
             $this->comment('bingo_tw open null items:' . $is_null);
         }
 
