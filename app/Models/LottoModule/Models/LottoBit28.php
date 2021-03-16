@@ -96,7 +96,7 @@ class LottoBit28 extends BasicModel
                 cache()->put($cache_name, $collect, 6000);
             }
         } catch (\Throwable $th) {
-            $collect->cache()->get($cache_name);
+            $collect = cache()->get($cache_name);
         }
 
         $uri  = $collect['uri'];
