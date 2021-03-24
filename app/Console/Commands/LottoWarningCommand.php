@@ -25,7 +25,7 @@ class LottoWarningCommand extends Command
             $mapping = config('lotto.model.system');
             $items   = [];
 
-            $date = date('Y-m-d H:i', strtotime('-2 minute'));
+            $date = date('Y-m-d H:i:s', strtotime('-150 seconds'));
             foreach ($lotto as $name) {
                 $model = $mapping[$name];
                 $data  = app($model)->where('lotto_at', '<=', $date)->where('status', 1);
@@ -44,7 +44,7 @@ class LottoWarningCommand extends Command
             }
 
             if (count($items) > 0) {
-                $content = '【Admin】' . implode('、', $items) . '触发BUG，请及时处理' . date('m-d H:i:s');
+                $content = '【Admin】' . implode('、', $items) . '有可能卡了，请关注' . date('m-d H:i:s');
                 dump($content);
                 toAdmin($content);
             }

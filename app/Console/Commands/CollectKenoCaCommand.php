@@ -20,6 +20,15 @@ class CollectKenoCaCommand extends Command
     {
         $this->info('collect keno_ca start===');
 
+        //每N分钟直接采集官方
+        $cache_name = 'CollectKenoCaCommandOfficialCheck';
+        if (cache()->has($cache_name) === false) {
+            $model = new LottoKenoCa();
+            dump('===直接采集官方===');
+            $model->officialCheck();
+            cache()->put($cache_name, true, 90);
+        }
+
         $date  = date('Y-m-d H:i:s', strtotime('+30 seconds'));
         $count = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->count();
         $this->comment('keno_ca has ' . $count);

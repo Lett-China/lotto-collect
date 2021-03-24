@@ -155,9 +155,13 @@ class LottoKenoCa extends BasicModel
 
         // 如果开奖时间为空或第一期，生成开奖时间
         if ($current->mark === 1 || $current->lotto_at === null) {
+            if ($lotto_at <= date('Y-m-d H:i:s')) {
+                $data['lotto_at'] = $lotto_at;
+                $data['status']   = 2;
+            } else {
+                return $this->officialCheck();
+            }
             $this->officialCheck();
-            $data['lotto_at'] = $lotto_at;
-            $data['status']   = 2;
         }
 
         if ($lotto_at === null) {
@@ -281,7 +285,7 @@ class LottoKenoCa extends BasicModel
                 $this->where('status', '1')->where('id', '>', $current->id)->delete();
                 $this->lottoCreate();
 
-                $content = '【Admin】CA促发修改时间，请及时核对' . date('m-d H:i:s');
+                $content = '【Admin】CA促发修改时间，请及时核对 ' . $current->id . '=' . $official_at;
                 toAdmin($content);
 
                 dump($current->id . ':' . $current->lotto_at . ' fix lotto_at');
