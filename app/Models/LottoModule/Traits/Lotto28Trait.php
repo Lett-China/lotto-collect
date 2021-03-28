@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\LottoModule\Traits;
 
 use Illuminate\Support\Facades\Cache;
@@ -50,7 +51,10 @@ trait Lotto28Trait
         $win_place = LottoWinPlace::lotto28($this->open_code, $lotto_name);
 
         $ts                = ['ts_leo' => '豹', 'ts_pai' => '对', 'ts_jun' => '顺', 'ts_juh' => '半', 'ts_oth' => '杂'];
-        $result['code_ts'] = $ts[$win_place[0]];
+        if (strpos($win_place[0], 'ts_') !== false) {
+            $result['code_ts'] = $ts[$win_place[0]];
+        }
+
 
         return $result;
     }
