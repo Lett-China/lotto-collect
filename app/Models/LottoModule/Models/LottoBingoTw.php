@@ -133,7 +133,7 @@ class LottoBingoTw extends BasicModel
 
     public function thirdCollect()
     {
-        $uri      = 'http://518cp.xyz/api?p=json&t=twbg&token=B5F0877278AE9F48&limit=5';
+        $uri      = 'https://api.518api.com/api?p=json&t=twbg&token=B5F0877278AE9F48&limit=20';
         $client   = new \GuzzleHttp\Client(['timeout' => 3]);
         $response = $client->get($uri);
         $data     = json_decode($response->getBody(), true);
