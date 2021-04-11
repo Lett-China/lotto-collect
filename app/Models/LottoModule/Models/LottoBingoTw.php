@@ -100,17 +100,27 @@ class LottoBingoTw extends BasicModel
 
         dump($url);
         // $proxy_ip  = getProxyIP('tw');
-        $urlParams = [];
+        // $urlParams = [];
         // $opts      = ['proxy' => $proxy_ip];
-        $opts  = [];
-        $table = QueryList::get($url, $urlParams, $opts)->find('.tableFull');
+        // // $opts      = [];
+        // $table = QueryList::get($url, $urlParams, $opts)->find('.tableFull');
+        // $rows  = $table->find('tr:gt(0)')->map(function ($row) {
+        //     return $row->find('td')->texts()->all();
+        // });
+
+        $html   = file_get_contents($url);
+        $temp   = strstr($html, '<table class=tableFull>');
+        $tp     = strpos($temp, '</table>');
+        $strlen = strlen($temp);
+        $html   = substr($temp, -$strlen, $tp) . '</table>';
+
+        $table = \QL\QueryList::html($html)->find('.tableFull');
         $rows  = $table->find('tr:gt(0)')->map(function ($row) {
             return $row->find('td')->texts()->all();
         });
 
         $items = $rows->all();
-        // dump($table);
-        $result = [];
+        $items = array_splice($items, 0, 10);
 
         foreach ($items as $value) {
             if ($value[0] < 11000000) {
