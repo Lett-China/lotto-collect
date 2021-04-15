@@ -36,7 +36,7 @@ class CollectKenoCaCommand extends Command
         if ($count !== 0) {
             $model = new LottoKenoCa();
             $model->officialCheck();
-            $model->thirdCollect();
+            // $model->thirdCollect();
             $model->thirdCollect2();
         }
 
