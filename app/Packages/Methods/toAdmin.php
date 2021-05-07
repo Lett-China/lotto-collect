@@ -13,7 +13,7 @@ function toAdmin($content)
     $response = $client->get($url, ['query' => $params]);
     $result   = json_decode($response->getBody(), true);
 
-    // return $result === 0 ? true : false;
+    return $result === 0 ? true : false;
 
     $url    = 'https://api.smsbao.com/wsms';
     $params = [
