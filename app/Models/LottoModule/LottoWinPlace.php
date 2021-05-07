@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\LottoModule;
 
 class LottoWinPlace
@@ -31,6 +32,85 @@ class LottoWinPlace
         foreach (array_unique($code) as $value) {
             $result[] = 'qtj_' . $value;
         }
+
+        return $result;
+    }
+
+    public static function lotto28Yl($open_code, $lotto_name)
+    {
+        $formula = LottoFormula::$lotto_name($open_code);
+        $code    = $formula['code_arr'];
+
+        $he = $formula['code_he'];
+
+        $win = [];
+
+        $he % 2 == 0 && $win[]              = 'dob'; //双
+        $he % 2 == 1 && $win[]              = 'sig'; //单
+        $he >= 14 && $win[]                 = 'big'; //大
+        $he <= 13 && $win[]                 = 'sml'; //小
+        $he <= 5 && $win[]                   = 'xsm'; //极小
+        $he >= 22 && $win[]                  = 'xbg'; //极大
+        $he % 2 == 0 && $he >= 14 && $win[] = 'bdo'; //大双
+        $he % 2 == 1 && $he >= 14 && $win[] = 'bsg'; //大单
+        $he % 2 == 0 && $he <= 13 && $win[] = 'sdo'; //小双
+        $he % 2 == 1 && $he <= 13 && $win[] = 'ssg'; //小单
+
+
+        $result = [];
+
+        //特殊玩法-龙
+        $long_arr = ['00', '03', '06', '09', '12', '15', '18', '21', '24', '27'];
+        if (in_array($he, $long_arr)) {
+            $win[] = 'long';
+        }
+        //特殊玩法-虎
+        $hu_arr = ['01', '04', '07', '10', '13', '16', '19', '22', '25'];
+        if (in_array($he, $hu_arr)) {
+            $win[] = 'hu';
+        }
+        //特殊玩法-豹
+        $bao_arr = ['02', '05', '08', '11', '14', '17', '20', '23', '26'];
+        if (in_array($he, $bao_arr)) {
+            $win[] = 'bao';
+        }
+        //是否为顺子
+        asort($code);
+        $str = implode('', $code);
+        if (preg_match('/^(0(?=1)|1(?=2)|2(?=3)|3(?=4)|4(?=5)|5(?=6)|6(?=7)|7(?=8)|8(?=9)){2}\d$/', $str)) {
+            $win[] = 'sunzi';
+        }
+        //顺子特殊
+        if (implode('', $code) === '019') {
+            $win[] = 'sunzi';
+        }
+
+        //是否为豹子
+        $unique                        = array_unique($code);
+        count($unique) === 1 && $win[] = 'baozi';
+
+        //是否为对子
+        count($unique) === 2 && $win[] = 'duizi';
+
+        //数字玩法
+        if (strlen($he) == 1) {
+            $win[] = '0' . $he;
+        } else {
+            $win[] = $he;
+        }
+
+
+        foreach ($win as $value) {
+            $result[] = 'room1_' . $value;
+            $result[] = 'room2_' . $value;
+            $result[] = 'room3_' . $value;
+            $result[] = 'room4_' . $value;
+            $result[] = 'room5_' . $value;
+            $result[] = 'room6_' . $value;
+            $result[] = 'room7_' . $value;
+            $result[] = 'room8_' . $value;
+        }
+
 
         return $result;
     }

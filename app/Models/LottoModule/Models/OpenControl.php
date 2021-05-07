@@ -46,7 +46,13 @@ class OpenControl extends Model
             return 0;
         }
 
-        $win_place = LottoWinPlace::lotto28($open_code, $lotto_name);
+        $win_place = [];
+        if ($lotto_name === 'ylde28') {
+            $win_place = LottoWinPlace::lotto28Yl($open_code);
+        } else {
+            $win_place = LottoWinPlace::lotto28($open_code, $lotto_name);
+        }
+
 
         $total_bonus = 0;
         $total_bet   = 0;
