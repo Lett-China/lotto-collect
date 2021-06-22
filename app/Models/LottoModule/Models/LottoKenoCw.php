@@ -257,12 +257,19 @@ class LottoKenoCw extends BasicModel
 
     private function collectData($date)
     {
-        $url = 'https://www.wclc.com/winning-numbers/keno.htm?channel=print&selDate=' . $date;
+        // $url = 'https://www.wclc.com/winning-numbers/keno.htm?channel=print&selDate=' . $date;
         // $proxy_ip  = getProxyIP('ca');
         // $opts      = ['proxy' => $proxy_ip];
         // $table = QueryList::get($url, [], $opts)->find('.kenoTable');
 
-        $html  = file_get_contents($url);
+        try {
+            $url  = 'https://www.wclc.com/winning-numbers/keno.htm?channel=print&selDate=' . $date;
+            $html = file_get_contents($url);
+        } catch (\Throwable $th) {
+            $url  = 'http://www.wclc.com/winning-numbers/keno.htm';
+            $html = file_get_contents($url);
+        }
+
         $table = QueryList::html($html)->find('.kenoTable');
 
         $rows = $table->find('tr:gt(0)')->map(function ($row) {

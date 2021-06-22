@@ -317,17 +317,25 @@ class LottoKenoCa extends BasicModel
 
     public function thirdCollect()
     {
-        $uri      = 'https://api.518api.com/api?p=json&t=jndbskl8&token=B5F0877278AE9F48&limit=5';
+        $uri      = 'http://api.qqcp.net/test?p=json&t=cakeno&token=715BB95E8C7F1ACD&limit=5';
         $client   = new \GuzzleHttp\Client(['timeout' => 3]);
         $response = $client->get($uri);
         $data     = json_decode($response->getBody(), true);
 
         try {
             foreach ($data['data'] as $key => $value) {
+                $open_code = explode(',', $value['opencode']);
+
+                if ($open_code[19] <= $open_code[18]) {
+                    unset($open_code[19]);
+                    $open_code[19] = $open_code[18] + 1;
+                }
+                $open_code = implode(',', $open_code);
+
                 $item = [
                     'id'        => $value['expect'],
-                    'open_code' => $value['opencode'],
-                    'opened_at' => $value['opentime'],
+                    'open_code' => $open_code,
+                    'opened_at' => null,
                 ];
 
                 $this->lottoOpen($item);
@@ -341,7 +349,7 @@ class LottoKenoCa extends BasicModel
 
     public function thirdCollect2()
     {
-        $uri = 'https://www.keno100.biz/public/json_draw_history.php?city=3&dwi=0&_=1614698217462';
+        $uri = 'https://www.keno100.me/public/json_draw_history.php?city=3&dwi=0&_=1622533908940';
 
         $options = [
             // 'proxy'   => ['https' => $proxy_ip],
@@ -350,9 +358,13 @@ class LottoKenoCa extends BasicModel
             ],
 
         ];
-        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
+        $client   = new \GuzzleHttp\Client(['timeout' => 5]);
         $response = $client->get($uri, $options);
         $data     = json_decode($response->getBody(), true);
+
+        // dump($data);
+
+        return false;
 
         $data = array_slice(array_reverse($data['d_list']), 0, 10);
 
@@ -381,9 +393,47 @@ class LottoKenoCa extends BasicModel
                 'opened_at' => null,
             ];
 
+            dump($item);
+
             $this->lottoOpen($item);
         }
 
         return true;
+    }
+
+    public function thirdCollect3()
+    {
+        $date = date('Y-m-d H:i:s');
+        $lose = LottoKenoCa::where('status', 1)
+        // ->where('lotto_at', '<=', $date)
+        // ->orderBy('id', 'desc')
+            ->first(['id', 'lotto_at']);
+
+        if ($lose === null) {
+            return false;
+        }
+
+        $url     = 'https://www.awcpaa.com/api/Number/QueryLotteryNumberByIssueForKenoExtensions?lotteryId=1008&issues=' . $lose->id . '&v=1618571668483';
+        $options = [
+            'ssl' => [
+                'verify_peer'      => false,
+                'verify_peer_name' => false,
+            ],
+        ];
+        $data = file_get_contents($url, false, stream_context_create($options));
+        $data = json_decode($data, true);
+
+        if (!$data['Result']) {
+            return false;
+        }
+
+        $data = $data['Result'][0];
+        $item = [
+            'id'        => $data['Issue'],
+            'open_code' => $data['Number'],
+            'opened_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $this->lottoOpen($item);
     }
 }

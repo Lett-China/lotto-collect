@@ -19,7 +19,6 @@ class CollectKenoCaCommand extends Command
     public function handle()
     {
         $this->info('collect keno_ca start===');
-
         //每N分钟直接采集官方
         $cache_name = 'CollectKenoCaCommandOfficialCheck';
         if (cache()->has($cache_name) === false) {
@@ -35,9 +34,9 @@ class CollectKenoCaCommand extends Command
 
         if ($count !== 0) {
             $model = new LottoKenoCa();
+            $model->thirdCollect3();
             $model->officialCheck();
-            // $model->thirdCollect();
-            $model->thirdCollect2();
+            // $model->thirdCollect2();
         }
 
         try {
