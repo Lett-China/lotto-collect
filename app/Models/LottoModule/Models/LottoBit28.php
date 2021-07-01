@@ -65,9 +65,11 @@ class LottoBit28 extends BasicModel
         //     return $result;
         // };
 
-        $main = function () {
+        $main = function ($backup = false) {
             $uri = 'https://www.blockchain.com/btc/unconfirmed-transactions';
-
+            if ($backup === true) {
+                $uri = 'https://blockchain.com/bch/unconfirmed-transactions';
+            }
             // $proxy_ip = getProxyIP('bit');
             // $opts     = ['proxy' => $proxy_ip];
             $table = QueryList::get($uri, [], [])->find('.beTSoK');
@@ -94,6 +96,8 @@ class LottoBit28 extends BasicModel
             $collect = $main();
             if (count($collect['data']) > 0) {
                 cache()->put($cache_name, $collect, 6000);
+            } else {
+                $collect = $main(true);
             }
         } catch (\Throwable $th) {
             $collect = cache()->get($cache_name);
