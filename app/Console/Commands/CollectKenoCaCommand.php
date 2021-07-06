@@ -25,7 +25,7 @@ class CollectKenoCaCommand extends Command
             $model = new LottoKenoCa();
             dump('===直接采集官方===');
             $model->officialCheck();
-            cache()->put($cache_name, true, 90);
+            cache()->put($cache_name, true, 300);
         }
 
         $date  = date('Y-m-d H:i:s', strtotime('+30 seconds'));
@@ -35,7 +35,7 @@ class CollectKenoCaCommand extends Command
         if ($count !== 0) {
             $model = new LottoKenoCa();
             $model->thirdCollect3();
-            $model->officialCheck();
+            // $model->officialCheck();
             // $model->thirdCollect2();
         }
 
