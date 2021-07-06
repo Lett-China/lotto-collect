@@ -48,11 +48,10 @@ class OpenControl extends Model
 
         $win_place = [];
         if ($lotto_name === 'ylde28') {
-            $win_place = LottoWinPlace::lotto28Yl($open_code);
+            $win_place = LottoWinPlace::lotto28Yl($open_code, $lotto_name);
         } else {
             $win_place = LottoWinPlace::lotto28($open_code, $lotto_name);
         }
-
 
         $total_bonus = 0;
         $total_bet   = 0;
