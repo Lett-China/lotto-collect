@@ -352,19 +352,28 @@ class LottoKenoCa extends BasicModel
         $uri = 'https://www.keno100.me/public/json_draw_history.php?city=3&dwi=0&_=1622533908940';
 
         $options = [
-            // 'proxy'   => ['https' => $proxy_ip],
-            'headers' => [
-                'x-requested-with' => 'XMLHttpRequest',
+            'ssl' => [
+                'verify_peer'      => false,
+                'verify_peer_name' => false,
             ],
-
         ];
-        $client   = new \GuzzleHttp\Client(['timeout' => 5]);
-        $response = $client->get($uri, $options);
-        $data     = json_decode($response->getBody(), true);
+        $data = file_get_contents($uri, false, stream_context_create($options));
 
-        // dump($data);
+        // $proxy_ip = getProxyIP('tw');
+        // $proxy_ip = '101.32.251.31:13488';
+        // dump($proxy_ip);
+        // $options = [
+        //     'proxy'   => ['https' => $proxy_ip],
+        //     'headers' => [
+        //         'x-requested-with' => 'XMLHttpRequest',
+        //     ],
 
-        return false;
+        // ];
+        // $client   = new \GuzzleHttp\Client(['timeout' => 5]);
+        // $response = $client->get($uri, $options);
+        // $data     = json_decode($response->getBody(), true);
+
+        dd($data);
 
         $data = array_slice(array_reverse($data['d_list']), 0, 10);
 
@@ -415,13 +424,19 @@ class LottoKenoCa extends BasicModel
 
         $url     = 'https://www.awcpaa.com/api/Number/QueryLotteryNumberByIssueForKenoExtensions?lotteryId=1008&issues=' . $lose->id . '&v=1618571668483';
         $options = [
-            'ssl' => [
+            'http' => [
+                'method'  => 'GET',
+                'timeout' => 3,
+            ],
+            'ssl'  => [
                 'verify_peer'      => false,
                 'verify_peer_name' => false,
             ],
         ];
         $data = file_get_contents($url, false, stream_context_create($options));
         $data = json_decode($data, true);
+
+        dump($lose->id, $data);
 
         if (!$data['Result']) {
             return false;

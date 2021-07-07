@@ -32,11 +32,14 @@ class CollectKenoCaCommand extends Command
         $count = LottoKenoCa::where('lotto_at', '<=', $date)->where('status', 1)->count();
         $this->comment('keno_ca has ' . $count);
 
+        $model = new LottoKenoCa();
         if ($count !== 0) {
-            $model = new LottoKenoCa();
-            $model->thirdCollect3();
-            // $model->officialCheck();
-            // $model->thirdCollect2();
+            try {
+                $model->thirdCollect3();
+            } catch (\Throwable $th) {
+                dump($th);
+                $model->officialCheck();
+            }
         }
 
         try {
