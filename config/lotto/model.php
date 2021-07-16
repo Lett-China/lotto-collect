@@ -14,6 +14,7 @@ $system = [
     'lult28'  => 'App\Models\LottoModule\Models\LottoKenoLuLt',
     'bit28'   => 'App\Models\LottoModule\Models\LottoBit28',
     'ylde28'  => 'App\Models\LottoModule\Models\LottoKenoYlde',
+    'hmde28'  => 'App\Models\LottoModule\Models\LottoKenoHmde',
     // 'bj28'    => 'App\Models\LottoModule\Models\LottoBeiJing8',
     // 'pc28'    => 'App\Models\LottoModule\Models\LottoPc28',
     // 'mlaft'   => 'App\Models\LottoModule\Models\LottoMlaft',

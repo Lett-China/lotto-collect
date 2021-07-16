@@ -47,7 +47,7 @@ class OpenControl extends Model
         }
 
         $win_place = [];
-        if ($lotto_name === 'ylde28') {
+        if ($lotto_name === 'ylde28' || $lotto_name === 'hmde28') {
             $win_place = LottoWinPlace::lotto28Yl($open_code, $lotto_name);
         } else {
             $win_place = LottoWinPlace::lotto28($open_code, $lotto_name);
