@@ -49,22 +49,6 @@ class LottoBit28 extends BasicModel
 
     public function lottoCollectData()
     {
-        // $backup = function () {
-        //     $client   = new \GuzzleHttp\Client(['timeout' => 10]);
-        //     $proxy_ip = getProxyIP('bit');
-        //     $uri      = 'https://etherscan.io/txsPending';
-        //     $option   = ['proxy' => ['http' => $proxy_ip]];
-        //     $response = $client->get($uri, $option);
-        //     $body     = $response->getBody();
-
-        //     $temp = [];
-        //     preg_match_all('/[a-z\d+]{64}/', $body, $temp);
-        //     $data = array_unique($temp[0]);
-
-        //     $result = ['body' => $body, 'uri' => $uri, 'data' => $data];
-        //     return $result;
-        // };
-
         $main = function ($backup = false) {
             $uri = 'https://www.blockchain.com/btc/unconfirmed-transactions';
             if ($backup === true) {
@@ -91,16 +75,44 @@ class LottoBit28 extends BasicModel
             return $result;
         };
 
+        $collectBC = function () {
+            //https://blockchair.com/bitcoin/blocks?
+
+            //获取区块ID
+            $uri      = 'https://api.blockchair.com/bitcoin/blocks?limit=15&offset=0';
+            $client   = new \GuzzleHttp\Client(['timeout' => 10]);
+            $response = $client->get($uri);
+            $data     = json_decode($response->getBody(), true);
+            $block_id = $data['data'][0]['id'];
+
+            $uri      = 'https://api.blockchair.com/bitcoin/transactions?q=block_id(' . $block_id . ')&limit=100&s=id(asc)';
+            $client   = new \GuzzleHttp\Client(['timeout' => 10]);
+            $response = $client->get($uri);
+            $data     = json_decode($response->getBody(), true);
+
+            $result = ['uri' => $uri, 'data' => []];
+
+            foreach ($data['data'] as $key => $value) {
+                $result['data'][] = $value['hash'];
+            }
+
+            return $result;
+        };
+
         $cache_name = 'bitCollectData';
         try {
             $collect = $main();
+            dd($collect);
             if (count($collect['data']) > 0) {
                 cache()->put($cache_name, $collect, 6000);
             } else {
-                $collect = $main(true);
+                $collect = $collectBC();
             }
         } catch (\Throwable $th) {
             $collect = cache()->get($cache_name);
+            if ($collect === null) {
+                $collect = $collectBC();
+            }
         }
 
         $uri  = $collect['uri'];
