@@ -2,7 +2,6 @@
 namespace App\Models\LottoModule\Models;
 
 use QL\QueryList;
-use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\Models\OpenControl;
 use App\Models\LottoModule\Traits\Lotto28Trait;
@@ -102,7 +101,6 @@ class LottoBit28 extends BasicModel
         $cache_name = 'bitCollectData';
         try {
             $collect = $main();
-            dd($collect);
             if (count($collect['data']) > 0) {
                 cache()->put($cache_name, $collect, 6000);
             } else {
