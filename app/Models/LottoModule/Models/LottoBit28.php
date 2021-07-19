@@ -2,6 +2,7 @@
 namespace App\Models\LottoModule\Models;
 
 use QL\QueryList;
+use App\Models\LottoModule\LottoUtils;
 use App\Models\LottoModule\LottoFormula;
 use App\Models\LottoModule\Models\OpenControl;
 use App\Models\LottoModule\Traits\Lotto28Trait;
