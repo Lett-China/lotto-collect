@@ -25,7 +25,7 @@ class LottoKenoJcde extends BasicModel
 
         $last_lotto  = $this->orderBy('id', 'desc')->first();
         $last_time   = strtotime($last_lotto->lotto_at);
-        $next_second = 210; //90改210
+        $next_second = 90; //90改210
         $next_mark   = 0;
         $next_at     = null;
 
