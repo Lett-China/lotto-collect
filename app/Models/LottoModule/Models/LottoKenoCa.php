@@ -158,6 +158,7 @@ class LottoKenoCa extends BasicModel
             if ($lotto_at <= date('Y-m-d H:i:s')) {
                 $data['lotto_at'] = $lotto_at;
                 $data['status']   = 2;
+                $current->update($data);
             } else {
                 return $this->officialCheck();
             }

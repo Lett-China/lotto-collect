@@ -18,8 +18,7 @@ class LottoWarningCommand extends Command
     public function handle()
     {
         $this->info('lotto warning start');
-
-        cache()->remember('lottoWarningHandled', 60, function () {
+        cache()->remember('lottoWarningHandled', 120, function () {
             $this->info('进入处理');
             $lotto   = ['ca28', 'cw28', 'tw28', 'bit28', 'de28', 'bit28'];
             $mapping = config('lotto.model.system');
