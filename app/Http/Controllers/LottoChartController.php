@@ -16,6 +16,7 @@ class LottoChartController extends Controller
             'cw28'   => '加拿大西部',
             'bit28'  => '比特币',
             'kojc28' => '韩国',
+            'jcde28' => '德国',
             'de28'   => '德国',
             'bj28'   => '北京',
             'pc28'   => '蛋蛋',

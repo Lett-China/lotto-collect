@@ -25,7 +25,7 @@ class LottoKenoJcde extends BasicModel
 
         $last_lotto  = $this->orderBy('id', 'desc')->first();
         $last_time   = strtotime($last_lotto->lotto_at);
-        $next_second = 210; //90改210
+        $next_second = 90; //90改210
         $next_mark   = 0;
         $next_at     = null;
 
@@ -33,7 +33,7 @@ class LottoKenoJcde extends BasicModel
         $new_id    = $last_lotto->id + 1;
         if ($next_time < time()) {
             $time_a    = time();
-            $time_b    = strtotime('2019-10-02') + 60;
+            $time_b    = strtotime('2019-12-10') + 60;
             $diff      = intval(($time_a - $time_b) / 90) + 1;
             $new_id    = 100000 + $diff;
             $next_time = $diff * 90 + $time_b;
@@ -63,7 +63,7 @@ class LottoKenoJcde extends BasicModel
             ->get();
         $items->makeVisible(['control']);
         foreach ($items as $item) {
-            $this->getBetFromGd28($item->id);
+
             $this->lottoOpenItem($item);
         }
 
@@ -126,26 +126,5 @@ class LottoKenoJcde extends BasicModel
         $item->save();
 
         LottoUtils::lottoOpenBroadcasts($this->lotto_name, $item->id);
-    }
-
-    private function getBetFromGd28($lotto_id)
-    {
-        $uri      = 'http://47.242.70.180:12433/auto/de28con?lotto_id=' . $lotto_id;
-        $client   = new \GuzzleHttp\Client(['timeout' => 3]);
-        $response = $client->get($uri);
-        $data     = json_decode($response->getBody(), true);
-
-        dump($data);
-
-        if (count($data['bet_places']) > 0) {
-            $lotto_index = $data['lotto_name'] . ':' . $data['lotto_id'];
-            $item        = [
-                'lotto_index' => $lotto_index,
-                'bet_places'  => $data['bet_places'],
-                'app_name'    => 'gd28',
-            ];
-
-            $create = ControlBet::create($item);
-        }
     }
 }
