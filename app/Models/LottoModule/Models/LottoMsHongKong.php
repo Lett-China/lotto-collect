@@ -74,6 +74,9 @@ class LottoMsHongKong extends Model
             if ($current->lotto_at > $lotto_at) {
                 $data['status'] = 3;
                 $warning_type   = 'error';
+            } else {
+                // $data['lotto_at'] = $lotto_at;
+                // $this->where('id', '>', $current->id)->delete();
             }
             LottoWarning::lottoAt($warning_type, __CLASS__, $current->id, $lotto_at, $current->lotto_at);
         }
