@@ -127,6 +127,8 @@ class LottoKenoCa extends BasicModel
         $current  = $this->find($data['id']);
         $lotto_at = $lottoAtFix($data['opened_at']);
 
+        dump('系统生成的开奖时间' . $lotto_at);
+
         if ($current == null && $lotto_at) {
             $data['status']   = 2;
             $data['id']       = $data['id'];
@@ -145,14 +147,6 @@ class LottoKenoCa extends BasicModel
 
         $data['status'] = 2;
 
-        // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
-        if ($lotto_at && $current->lotto_at !== null && $current->lotto_at != $lotto_at) {
-            $this->officialCheck();
-            if ($current->lotto_at > $lotto_at) {
-                $data['status'] = 3;
-            }
-        }
-
         // 如果开奖时间为空或第一期，生成开奖时间
         if ($current->mark === 1 || $current->lotto_at === null) {
             if ($lotto_at <= date('Y-m-d H:i:s')) {
@@ -163,6 +157,14 @@ class LottoKenoCa extends BasicModel
                 return $this->officialCheck();
             }
             $this->officialCheck();
+        }
+
+        // 库中的开奖时间与计算的开奖时间不符合 ，标识状态为异常
+        if ($lotto_at && $current->lotto_at !== null && $current->lotto_at != $lotto_at) {
+            // $this->officialCheck();
+            if ($current->lotto_at > $lotto_at) {
+                $data['status'] = 3;
+            }
         }
 
         if ($lotto_at === null) {
