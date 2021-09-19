@@ -145,7 +145,7 @@ class LottoKenoCw extends BasicModel
 
     public function lottoOpenDrawNum($id)
     {
-        $url = 'http://www.wclc.com/winning-numbers/keno.htm?channel=print&drawNum=' . $id;
+        $url = 'http://www.wclc.com/winning-numbers/keno.htm?drawNum=' . $id;
         // $proxy_ip  = getProxyIP('ca');
         // $urlParams = [];
         // $opts      = ['proxy' => $proxy_ip];
@@ -204,7 +204,7 @@ class LottoKenoCw extends BasicModel
         return 'update';
     }
 
-    public function lottoOpenOfficial($date = null, $limit = 11)
+    public function lottoOpenOfficial($date = null, $limit = 50)
     {
         $date  = $date ?: date('m/d/Y');
         $items = $this->collectData($date);
