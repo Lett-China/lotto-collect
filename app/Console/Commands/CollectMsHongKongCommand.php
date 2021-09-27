@@ -24,11 +24,11 @@ class CollectMsHongKongCommand extends Command
         $count = LottoMsHongKong::where('lotto_at', '<=', $date)->where('status', 1)->count();
         $this->comment('mshk has ' . $count);
 
+        $model = new LottoMsHongKong();
         if ($count !== 0) {
-            $model = new LottoMsHongKong();
             $model->thirdCollect();
-            $model->lottoCreate();
         }
+        $model->lottoCreate();
 
         return $this->info('collect mshk success');
     }
