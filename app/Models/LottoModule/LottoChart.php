@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\LottoModule;
 
 class LottoChart
@@ -18,73 +19,71 @@ class LottoChart
 
     public function chartKeno11()
     {
-        {
-            $items = $this->items;
+        $items = $this->items;
 
-            $limit = request()->limit ?: 100;
+        $limit = request()->limit ?: 100;
 
-            $_stand     = [22, 55, 83, 111, 138, 166, 138, 111, 83, 55, 27];
-            $code_place = [];
-            $stand      = [];
-            for ($i = 2; $i <= 12; $i++) {
-                $code         = sprintf('%02d', $i);
-                $stand[$code] = $_stand[$i - 2];
-                $code_place[] = $code;
-            }
-
-            $stand['single'] = 500;
-            $stand['double'] = 500;
-            $stand['middle'] = 666;
-            $stand['side']   = 333;
-            $stand['big']    = 583;
-            $stand['small']  = 416;
-
-            $pro_stand = [];
-            $pro_real  = [];
-            foreach ($stand as $key => $value) {
-                $pro_stand[$key] = intval($stand[$key] / 1000 * $limit);
-                $pro_real[$key]  = 0;
-            }
-
-            foreach ($items as $item) {
-                $he = $item->win_ext_el['code_he'];
-                $pro_real[$he] += 1;
-
-                $chart              = ['win_he' => $he];
-                $chart['single']    = $he % 2 == 1;
-                $chart['double']    = $he % 2 == 0;
-                $chart['big']       = $he >= 7;
-                $chart['small']     = $he <= 6;
-                $chart['middle']    = $he >= 5 && $he <= 9 ? true : false;
-                $chart['side']      = !$chart['middle'];
-                $chart['mta_big']   = substr($he, -1) >= 5 ? true : false;
-                $chart['mta_small'] = !$chart['mta_big'];
-                $chart['mod_3']     = $he % 3;
-                $chart['mod_4']     = $he % 4;
-                $chart['mod_5']     = $he % 5;
-                $item['lotto_at']   = date('m-d H:i:s', strtotime($item['lotto_at']));
-
-                $chart['single'] && $pro_real['single']++;
-                $chart['double'] && $pro_real['double']++;
-                $chart['big'] && $pro_real['big']++;
-                $chart['small'] && $pro_real['small']++;
-                $chart['side'] && $pro_real['side']++;
-                $chart['middle'] && $pro_real['middle']++;
-
-                $item->chart = $chart;
-                $item->makeHidden('win_extend');
-            }
-
-            $result = [
-                'items'      => $items->toArray(),
-                'code_place' => $code_place,
-                'pro_stand'  => $pro_stand,
-                'pro_real'   => $pro_real,
-
-            ];
-
-            return $result;
+        $_stand     = [22, 55, 83, 111, 138, 166, 138, 111, 83, 55, 27];
+        $code_place = [];
+        $stand      = [];
+        for ($i = 2; $i <= 12; $i++) {
+            $code         = sprintf('%02d', $i);
+            $stand[$code] = $_stand[$i - 2];
+            $code_place[] = $code;
         }
+
+        $stand['single'] = 500;
+        $stand['double'] = 500;
+        $stand['middle'] = 666;
+        $stand['side']   = 333;
+        $stand['big']    = 583;
+        $stand['small']  = 416;
+
+        $pro_stand = [];
+        $pro_real  = [];
+        foreach ($stand as $key => $value) {
+            $pro_stand[$key] = intval($stand[$key] / 1000 * $limit);
+            $pro_real[$key]  = 0;
+        }
+
+        foreach ($items as $item) {
+            $he = $item->win_ext_el['code_he'];
+            $pro_real[$he] += 1;
+
+            $chart              = ['win_he' => $he];
+            $chart['single']    = $he % 2 == 1;
+            $chart['double']    = $he % 2 == 0;
+            $chart['big']       = $he >= 7;
+            $chart['small']     = $he <= 6;
+            $chart['middle']    = $he >= 5 && $he <= 9 ? true : false;
+            $chart['side']      = !$chart['middle'];
+            $chart['mta_big']   = substr($he, -1) >= 5 ? true : false;
+            $chart['mta_small'] = !$chart['mta_big'];
+            $chart['mod_3']     = $he % 3;
+            $chart['mod_4']     = $he % 4;
+            $chart['mod_5']     = $he % 5;
+            $item['lotto_at']   = date('m-d H:i:s', strtotime($item['lotto_at']));
+
+            $chart['single'] && $pro_real['single']++;
+            $chart['double'] && $pro_real['double']++;
+            $chart['big'] && $pro_real['big']++;
+            $chart['small'] && $pro_real['small']++;
+            $chart['side'] && $pro_real['side']++;
+            $chart['middle'] && $pro_real['middle']++;
+
+            $item->chart = $chart;
+            $item->makeHidden('win_extend');
+        }
+
+        $result = [
+            'items'      => $items->toArray(),
+            'code_place' => $code_place,
+            'pro_stand'  => $pro_stand,
+            'pro_real'   => $pro_real,
+
+        ];
+
+        return $result;
     }
 
     public function chartKeno16()
@@ -224,45 +223,48 @@ class LottoChart
 
     public function chartKeno36()
     {
-        {
-            $items = $this->items;
+        $items = $this->items;
 
-            $limit = request()->limit ?: 100;
+        $limit = request()->limit ?: 100;
 
-            $_stand     = [10, 270, 60, 360, 300];
-            $code_place = ['ts_leo', 'ts_pai', 'ts_jun', 'ts_juh', 'ts_oth'];
-            $stand      = [];
+        $_stand     = [10, 270, 60, 360, 300];
+        $code_place = ['ts_leo', 'ts_pai', 'ts_jun', 'ts_juh', 'ts_oth'];
+        $stand      = [];
 
-            foreach ($code_place as $key => $code) {
-                $stand[$code] = $_stand[$key];
-            }
-
-            $pro_stand = [];
-            $pro_real  = [];
-            foreach ($stand as $key => $value) {
-                $pro_stand[$key] = intval($stand[$key] / 1000 * $limit);
-                $pro_real[$key]  = 0;
-            }
-
-            foreach ($items as $item) {
-                $code = $item->win_place[0];
-                $pro_real[$code] += 1;
-                $chart            = ['code_ts' => $code, 'code_arr' => $item->win_extend['code_arr']];
-                $item['lotto_at'] = date('m-d H:i:s', strtotime($item['lotto_at']));
-                $item->chart      = $chart;
-                $item->makeHidden('win_extend');
-            }
-
-            $result = [
-                'items'      => $items->toArray(),
-                'code_place' => $code_place,
-                'pro_stand'  => $pro_stand,
-                'pro_real'   => $pro_real,
-
-            ];
-
-            return $result;
+        foreach ($code_place as $key => $code) {
+            $stand[$code] = $_stand[$key];
         }
+
+        $pro_stand = [];
+        $pro_real  = [];
+        foreach ($stand as $key => $value) {
+            $pro_stand[$key] = intval($stand[$key] / 1000 * $limit);
+            $pro_real[$key]  = 0;
+        }
+
+        foreach ($items as $item) {
+            foreach ($item->win_place as $wkey => $wval) {
+                if (strpos($wval, 'ts_') !== false) {
+                    $code = $wval;
+                }
+            }
+            // $code = $item->win_place[0];
+            $pro_real[$code] += 1;
+            $chart            = ['code_ts' => $code, 'code_arr' => $item->win_extend['code_arr']];
+            $item['lotto_at'] = date('m-d H:i:s', strtotime($item['lotto_at']));
+            $item->chart      = $chart;
+            $item->makeHidden('win_extend');
+        }
+
+        $result = [
+            'items'      => $items->toArray(),
+            'code_place' => $code_place,
+            'pro_stand'  => $pro_stand,
+            'pro_real'   => $pro_real,
+
+        ];
+
+        return $result;
     }
 
     public function lotto($lotto_name)
