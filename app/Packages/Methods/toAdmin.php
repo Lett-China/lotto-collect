@@ -1,11 +1,12 @@
 <?php
 function toAdmin($content)
 {
+    return false;
     $url    = 'https://api.smsbao.com/sms';
     $params = [
         'u' => 'gd8888',
         'p' => md5('aa101088'),
-        'm' => '15520722572',
+        'm' => '18888888888',
         'c' => $content,
     ];
 
